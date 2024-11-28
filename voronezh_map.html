@@ -1,141 +1,166 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    
+
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    
-        <script>
-            L_NO_TOUCH = false;
-            L_DISABLE_3D = false;
-        </script>
-    
-    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
-    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+
+    <script>
+        L_NO_TOUCH = false;
+        L_DISABLE_3D = false;
+    </script>
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <style>
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
-    
-            <meta name="viewport" content="width=device-width,
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css" />
+
+    <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-            <style>
-                #map_94aeba08c950205401863e3cf27a35f2 {
-                    position: relative;
-                    width: 100.0%;
-                    height: 100.0%;
-                    left: 0.0%;
-                    top: 0.0%;
-                }
-                .leaflet-container { font-size: 1rem; }
-            </style>
-        
+    <style>
+        #map_94aeba08c950205401863e3cf27a35f2 {
+            position: relative;
+            width: 100.0%;
+            height: 100.0%;
+            left: 0.0%;
+            top: 0.0%;
+        }
+
+        .leaflet-container {
+            font-size: 1rem;
+        }
+    </style>
+
 </head>
+
 <body>
-    
-    
-            <div class="folium-map" id="map_94aeba08c950205401863e3cf27a35f2" ></div>
-        
+
+
+    <div class="folium-map" id="map_94aeba08c950205401863e3cf27a35f2"></div>
+
 </body>
 <script>
-    
-    
-            var map_94aeba08c950205401863e3cf27a35f2 = L.map(
-                "map_94aeba08c950205401863e3cf27a35f2",
-                {
-                    center: [51.6536, 39.2108],
-                    crs: L.CRS.EPSG3857,
-                    zoom: 12,
-                    zoomControl: true,
-                    preferCanvas: false,
-                }
-            );
 
-            
 
-        
-    
-            var tile_layer_cf6ff608eeb4947052d32d39558ec290 = L.tileLayer(
-                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
-            );
-        
-    
-            tile_layer_cf6ff608eeb4947052d32d39558ec290.addTo(map_94aeba08c950205401863e3cf27a35f2);
-        
-    
-            var marker_37dc556f2069dadc07f874b5718e6851 = L.marker(
-                [51.6536, 39.2108],
-                {}
-            ).addTo(map_94aeba08c950205401863e3cf27a35f2);
-        
-    
-        var popup_ca7ec0f751d14da3f671c2909e24d0bc = L.popup({"maxWidth": "100%"});
+    var map_94aeba08c950205401863e3cf27a35f2 = L.map(
+        "map_94aeba08c950205401863e3cf27a35f2",
+        {
+            center: [51.6536, 39.2108],
+            crs: L.CRS.EPSG3857,
+            zoom: 12,
+            zoomControl: true,
+            preferCanvas: false,
+        }
+    );
 
-        
-            
-                var html_3d792a12cf45a813029b8d6f4863a7c3 = $(`<div id="html_3d792a12cf45a813029b8d6f4863a7c3" style="width: 100.0%; height: 100.0%;">Воронеж</div>`)[0];
-                popup_ca7ec0f751d14da3f671c2909e24d0bc.setContent(html_3d792a12cf45a813029b8d6f4863a7c3);
-            
-        
 
-        marker_37dc556f2069dadc07f874b5718e6851.bindPopup(popup_ca7ec0f751d14da3f671c2909e24d0bc)
+
+
+
+    var tile_layer_cf6ff608eeb4947052d32d39558ec290 = L.tileLayer(
+        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        { "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false }
+    );
+
+
+    tile_layer_cf6ff608eeb4947052d32d39558ec290.addTo(map_94aeba08c950205401863e3cf27a35f2);
+
+
+    var marker_37dc556f2069dadc07f874b5718e6851 = L.marker(
+        [51.6536, 39.2108],
+        {}
+    ).addTo(map_94aeba08c950205401863e3cf27a35f2);
+
+
+    var popup_ca7ec0f751d14da3f671c2909e24d0bc = L.popup({ "maxWidth": "100%" });
+
+
+
+    var html_3d792a12cf45a813029b8d6f4863a7c3 = $(`<div id="html_3d792a12cf45a813029b8d6f4863a7c3" style="width: 100.0%; height: 100.0%;">Воронеж</div>`)[0];
+    popup_ca7ec0f751d14da3f671c2909e24d0bc.setContent(html_3d792a12cf45a813029b8d6f4863a7c3);
+
+
+
+    marker_37dc556f2069dadc07f874b5718e6851.bindPopup(popup_ca7ec0f751d14da3f671c2909e24d0bc)
         ;
 
-        
-    
-    
-            var marker_c3a6068d14729f7b9ac701d9de994b26 = L.marker(
-                [51.6586, 39.2088],
-                {}
-            ).addTo(map_94aeba08c950205401863e3cf27a35f2);
-        
-    
-        var popup_a40fa63246542db16918fc149f677ed9 = L.popup({"maxWidth": "100%"});
 
-        
-            
-                var html_bfce45b3afc972d67342fa7bf5526496 = $(`<div id="html_bfce45b3afc972d67342fa7bf5526496" style="width: 100.0%; height: 100.0%;">Дом-музей Ивана Бунина</div>`)[0];
-                popup_a40fa63246542db16918fc149f677ed9.setContent(html_bfce45b3afc972d67342fa7bf5526496);
-            
-        
 
-        marker_c3a6068d14729f7b9ac701d9de994b26.bindPopup(popup_a40fa63246542db16918fc149f677ed9)
+
+    var marker_c3a6068d14729f7b9ac701d9de994b26 = L.marker(
+        [51.6586, 39.2088],
+        {}
+    ).addTo(map_94aeba08c950205401863e3cf27a35f2);
+
+
+    var popup_a40fa63246542db16918fc149f677ed9 = L.popup({ "maxWidth": "100%" });
+
+
+
+    var html_bfce45b3afc972d67342fa7bf5526496 = $(`<div id="html_bfce45b3afc972d67342fa7bf5526496" style="width: 100.0%; height: 100.0%;">Дом-музей Ивана Бунина</div>`)[0];
+    popup_a40fa63246542db16918fc149f677ed9.setContent(html_bfce45b3afc972d67342fa7bf5526496);
+
+
+
+    marker_c3a6068d14729f7b9ac701d9de994b26.bindPopup(popup_a40fa63246542db16918fc149f677ed9)
         ;
 
-        
-    
-    
-            var marker_4fa68672d3da71356af1ec4a9ea8b648 = L.marker(
-                [51.6556, 39.2058],
-                {}
-            ).addTo(map_94aeba08c950205401863e3cf27a35f2);
-        
-    
-        var popup_37a4fed74357d35046abcdf8867b1c02 = L.popup({"maxWidth": "100%"});
 
-        
-            
-                var html_aad905ed29d24800fee839c66b4b83ba = $(`<div id="html_aad905ed29d24800fee839c66b4b83ba" style="width: 100.0%; height: 100.0%;">Памятник Александру Куприну</div>`)[0];
-                popup_37a4fed74357d35046abcdf8867b1c02.setContent(html_aad905ed29d24800fee839c66b4b83ba);
-            
-        
 
-        marker_4fa68672d3da71356af1ec4a9ea8b648.bindPopup(popup_37a4fed74357d35046abcdf8867b1c02)
+
+    var marker_4fa68672d3da71356af1ec4a9ea8b648 = L.marker(
+        [51.6556, 39.2058],
+        {}
+    ).addTo(map_94aeba08c950205401863e3cf27a35f2);
+
+
+    var popup_37a4fed74357d35046abcdf8867b1c02 = L.popup({ "maxWidth": "100%" });
+
+
+
+    var html_aad905ed29d24800fee839c66b4b83ba = $(`<div id="html_aad905ed29d24800fee839c66b4b83ba" style="width: 100.0%; height: 100.0%;">Памятник Александру Куприну</div>`)[0];
+    popup_37a4fed74357d35046abcdf8867b1c02.setContent(html_aad905ed29d24800fee839c66b4b83ba);
+
+
+
+    marker_4fa68672d3da71356af1ec4a9ea8b648.bindPopup(popup_37a4fed74357d35046abcdf8867b1c02)
         ;
 
-        
-    
-    
-            map_94aeba08c950205401863e3cf27a35f2.fitBounds(
-                [[51.5, 39.0], [51.8, 39.5]],
-                {}
-            );
-        
+
+
+
+    map_94aeba08c950205401863e3cf27a35f2.fitBounds(
+        [[51.5, 39.0], [51.8, 39.5]],
+        {}
+    );
+
 </script>
+
 </html>
