@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_30f86e479c5176b62dce9eda658c1cbb {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_30f86e479c5176b62dce9eda658c1cbb" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_30f86e479c5176b62dce9eda658c1cbb = L.map(
+                "map_30f86e479c5176b62dce9eda658c1cbb",
+                {
+                    center: [51.6536, 39.2108],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_479c41497813aa273d9740a38a4bbf41 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_479c41497813aa273d9740a38a4bbf41.addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+            var marker_78964da4c87ad7a8908b2e1f43529b4b = L.marker(
+                [51.6536, 39.2108],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_279dc6ec153cdbd8745f4e8ac3c4cb17 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_71e2b77fa69c4c6fb220b4fe0e025b46 = $(`<div id="html_71e2b77fa69c4c6fb220b4fe0e025b46" style="width: 100.0%; height: 100.0%;">Иван Бунин</div>`)[0];
+                popup_279dc6ec153cdbd8745f4e8ac3c4cb17.setContent(html_71e2b77fa69c4c6fb220b4fe0e025b46);
+            
+        
+
+        marker_78964da4c87ad7a8908b2e1f43529b4b.bindPopup(popup_279dc6ec153cdbd8745f4e8ac3c4cb17)
+        ;
+
+        
+    
+    
+            var marker_bbd8b24be2437af8d56fc83c0f6b65fb = L.marker(
+                [53.8833, 46.7333],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_d19cc8e88d72915a61ff4dcb244d5ced = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_f0682c77467c7277ab3ff4a317b0b068 = $(`<div id="html_f0682c77467c7277ab3ff4a317b0b068" style="width: 100.0%; height: 100.0%;">Александр Куприн</div>`)[0];
+                popup_d19cc8e88d72915a61ff4dcb244d5ced.setContent(html_f0682c77467c7277ab3ff4a317b0b068);
+            
+        
+
+        marker_bbd8b24be2437af8d56fc83c0f6b65fb.bindPopup(popup_d19cc8e88d72915a61ff4dcb244d5ced)
+        ;
+
+        
+    
+    
+            var marker_e706bc79fcba4a8ce6fcbef2f898dfa7 = L.marker(
+                [52.9667, 36.0667],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_fa9f459d72794d05c7458af6b4091ee6 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_82ff6fd3e72428c52549c57e2f1704a0 = $(`<div id="html_82ff6fd3e72428c52549c57e2f1704a0" style="width: 100.0%; height: 100.0%;">Иван Тургенев</div>`)[0];
+                popup_fa9f459d72794d05c7458af6b4091ee6.setContent(html_82ff6fd3e72428c52549c57e2f1704a0);
+            
+        
+
+        marker_e706bc79fcba4a8ce6fcbef2f898dfa7.bindPopup(popup_fa9f459d72794d05c7458af6b4091ee6)
+        ;
+
+        
+    
+    
+            var marker_b3a8a37adedee0ae2afd626e0321ebad = L.marker(
+                [51.6536, 39.2108],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_c3574e02569fbb8db4f7c8746fafa133 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_b9cf493df81f9abe5684ce0ccfc30c5f = $(`<div id="html_b9cf493df81f9abe5684ce0ccfc30c5f" style="width: 100.0%; height: 100.0%;">Иван Бунин</div>`)[0];
+                popup_c3574e02569fbb8db4f7c8746fafa133.setContent(html_b9cf493df81f9abe5684ce0ccfc30c5f);
+            
+        
+
+        marker_b3a8a37adedee0ae2afd626e0321ebad.bindPopup(popup_c3574e02569fbb8db4f7c8746fafa133)
+        ;
+
+        
+    
+    
+            var marker_4aa2ba29cbdbfa016d594706455d1e61 = L.marker(
+                [53.8833, 46.7333],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_5bf1fc730ee98ebc573b852922fb168e = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_f0f9982c077a74f887892e5fac489ddf = $(`<div id="html_f0f9982c077a74f887892e5fac489ddf" style="width: 100.0%; height: 100.0%;">Александр Куприн</div>`)[0];
+                popup_5bf1fc730ee98ebc573b852922fb168e.setContent(html_f0f9982c077a74f887892e5fac489ddf);
+            
+        
+
+        marker_4aa2ba29cbdbfa016d594706455d1e61.bindPopup(popup_5bf1fc730ee98ebc573b852922fb168e)
+        ;
+
+        
+    
+    
+            var marker_9ad95ac99280cd3eca8b72133cf76f86 = L.marker(
+                [52.9667, 36.0667],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_04a1027596e0c9f69de1071c19cc781c = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_b8d612aade53f6e1934afc51be0e624b = $(`<div id="html_b8d612aade53f6e1934afc51be0e624b" style="width: 100.0%; height: 100.0%;">Иван Тургенев</div>`)[0];
+                popup_04a1027596e0c9f69de1071c19cc781c.setContent(html_b8d612aade53f6e1934afc51be0e624b);
+            
+        
+
+        marker_9ad95ac99280cd3eca8b72133cf76f86.bindPopup(popup_04a1027596e0c9f69de1071c19cc781c)
+        ;
+
+        
+    
+    
+            var marker_d59a97afd65876b82601bd918b66b40b = L.marker(
+                [51.6536, 39.2108],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_a6af0cb2427cd5b6d5ada661ab5f6c46 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_977e5068e0b48d06e4a2524b0c75ec3b = $(`<div id="html_977e5068e0b48d06e4a2524b0c75ec3b" style="width: 100.0%; height: 100.0%;">Иван Бунин</div>`)[0];
+                popup_a6af0cb2427cd5b6d5ada661ab5f6c46.setContent(html_977e5068e0b48d06e4a2524b0c75ec3b);
+            
+        
+
+        marker_d59a97afd65876b82601bd918b66b40b.bindPopup(popup_a6af0cb2427cd5b6d5ada661ab5f6c46)
+        ;
+
+        
+    
+    
+            var marker_1a83ac2398a6983b0d67ef4e38ca52d6 = L.marker(
+                [53.8833, 46.7333],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_8e3ad368686f52515a6f063f87da7f9f = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_125ccb365bd1728cbad40404c8c2005b = $(`<div id="html_125ccb365bd1728cbad40404c8c2005b" style="width: 100.0%; height: 100.0%;">Александр Куприн</div>`)[0];
+                popup_8e3ad368686f52515a6f063f87da7f9f.setContent(html_125ccb365bd1728cbad40404c8c2005b);
+            
+        
+
+        marker_1a83ac2398a6983b0d67ef4e38ca52d6.bindPopup(popup_8e3ad368686f52515a6f063f87da7f9f)
+        ;
+
+        
+    
+    
+            var marker_308490f0b1489be4299c45939bb34d57 = L.marker(
+                [52.9667, 36.0667],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_3da8fbbf45a6e93925e779703d44d743 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_99dd199600059eeaeb79a9dc72987da0 = $(`<div id="html_99dd199600059eeaeb79a9dc72987da0" style="width: 100.0%; height: 100.0%;">Иван Тургенев</div>`)[0];
+                popup_3da8fbbf45a6e93925e779703d44d743.setContent(html_99dd199600059eeaeb79a9dc72987da0);
+            
+        
+
+        marker_308490f0b1489be4299c45939bb34d57.bindPopup(popup_3da8fbbf45a6e93925e779703d44d743)
+        ;
+
+        
+    
+    
+            var marker_dd23647410f800d562873a5ec038e398 = L.marker(
+                [51.6536, 39.2108],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_1982798ff07dde394ad521064b6af15d = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_9fbe4c6895a2db6cccabd2450d5c9493 = $(`<div id="html_9fbe4c6895a2db6cccabd2450d5c9493" style="width: 100.0%; height: 100.0%;">Иван Бунин</div>`)[0];
+                popup_1982798ff07dde394ad521064b6af15d.setContent(html_9fbe4c6895a2db6cccabd2450d5c9493);
+            
+        
+
+        marker_dd23647410f800d562873a5ec038e398.bindPopup(popup_1982798ff07dde394ad521064b6af15d)
+        ;
+
+        
+    
+    
+            var marker_c3be2ae1377a57e42a1ca562268e11fd = L.marker(
+                [53.8833, 46.7333],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_05cb9fab0609f40b8b841ddb53744f2f = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_67597f55df80f554f52216672305965e = $(`<div id="html_67597f55df80f554f52216672305965e" style="width: 100.0%; height: 100.0%;">Александр Куприн</div>`)[0];
+                popup_05cb9fab0609f40b8b841ddb53744f2f.setContent(html_67597f55df80f554f52216672305965e);
+            
+        
+
+        marker_c3be2ae1377a57e42a1ca562268e11fd.bindPopup(popup_05cb9fab0609f40b8b841ddb53744f2f)
+        ;
+
+        
+    
+    
+            var marker_1b0b91b8e76a614c67b06671f95867fb = L.marker(
+                [52.9667, 36.0667],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_a8bdd4216bbb29c9fb53a79fedace960 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_888745af1eda85b6faeec602bfda2f5e = $(`<div id="html_888745af1eda85b6faeec602bfda2f5e" style="width: 100.0%; height: 100.0%;">Иван Тургенев</div>`)[0];
+                popup_a8bdd4216bbb29c9fb53a79fedace960.setContent(html_888745af1eda85b6faeec602bfda2f5e);
+            
+        
+
+        marker_1b0b91b8e76a614c67b06671f95867fb.bindPopup(popup_a8bdd4216bbb29c9fb53a79fedace960)
+        ;
+
+        
+    
+    
+            var marker_b6f30e51f5a1f8a3724bd26a9b7b7125 = L.marker(
+                [51.6536, 39.2108],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_23ef315df79277d3be557700398d9bfb = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_7e7ac5e6376b588d929ae46d225788fd = $(`<div id="html_7e7ac5e6376b588d929ae46d225788fd" style="width: 100.0%; height: 100.0%;">Иван Бунин</div>`)[0];
+                popup_23ef315df79277d3be557700398d9bfb.setContent(html_7e7ac5e6376b588d929ae46d225788fd);
+            
+        
+
+        marker_b6f30e51f5a1f8a3724bd26a9b7b7125.bindPopup(popup_23ef315df79277d3be557700398d9bfb)
+        ;
+
+        
+    
+    
+            var marker_e1d964b9a21266af83895e8b8efab604 = L.marker(
+                [53.8833, 46.7333],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_968ff71edf4f2eaa704243ece3996d0b = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_869079ba83d3b98df75ed54f319de7b9 = $(`<div id="html_869079ba83d3b98df75ed54f319de7b9" style="width: 100.0%; height: 100.0%;">Александр Куприн</div>`)[0];
+                popup_968ff71edf4f2eaa704243ece3996d0b.setContent(html_869079ba83d3b98df75ed54f319de7b9);
+            
+        
+
+        marker_e1d964b9a21266af83895e8b8efab604.bindPopup(popup_968ff71edf4f2eaa704243ece3996d0b)
+        ;
+
+        
+    
+    
+            var marker_f5af12d7ac9a7d7f57ae2c5d245bca88 = L.marker(
+                [52.9667, 36.0667],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_a826e879754eb38becb563abbddb42d7 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_714799cfedfcb4d90585e8eb11ad9365 = $(`<div id="html_714799cfedfcb4d90585e8eb11ad9365" style="width: 100.0%; height: 100.0%;">Иван Тургенев</div>`)[0];
+                popup_a826e879754eb38becb563abbddb42d7.setContent(html_714799cfedfcb4d90585e8eb11ad9365);
+            
+        
+
+        marker_f5af12d7ac9a7d7f57ae2c5d245bca88.bindPopup(popup_a826e879754eb38becb563abbddb42d7)
+        ;
+
+        
+    
+    
+            var marker_067f6c5063ce4963588c0541d6c52189 = L.marker(
+                [51.6536, 39.2108],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_4fe18cb6ea206827daa0a543cb9966c4 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_65c1b04670a32402461709957881e59e = $(`<div id="html_65c1b04670a32402461709957881e59e" style="width: 100.0%; height: 100.0%;">Иван Бунин</div>`)[0];
+                popup_4fe18cb6ea206827daa0a543cb9966c4.setContent(html_65c1b04670a32402461709957881e59e);
+            
+        
+
+        marker_067f6c5063ce4963588c0541d6c52189.bindPopup(popup_4fe18cb6ea206827daa0a543cb9966c4)
+        ;
+
+        
+    
+    
+            var marker_e9ba2de2383b6113054a3107a04871df = L.marker(
+                [53.8833, 46.7333],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_34c21c1e200278ee3ca59f09025838fe = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_504ad1a55b3c8748659e7d0f1819a967 = $(`<div id="html_504ad1a55b3c8748659e7d0f1819a967" style="width: 100.0%; height: 100.0%;">Александр Куприн</div>`)[0];
+                popup_34c21c1e200278ee3ca59f09025838fe.setContent(html_504ad1a55b3c8748659e7d0f1819a967);
+            
+        
+
+        marker_e9ba2de2383b6113054a3107a04871df.bindPopup(popup_34c21c1e200278ee3ca59f09025838fe)
+        ;
+
+        
+    
+    
+            var marker_d6eca33b20586e60d1581bf6cfb5a1b6 = L.marker(
+                [52.9667, 36.0667],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_1fb7a79c984b28c36a5413be974b6a59 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_3594c884449ed31000a394cc44c6abef = $(`<div id="html_3594c884449ed31000a394cc44c6abef" style="width: 100.0%; height: 100.0%;">Иван Тургенев</div>`)[0];
+                popup_1fb7a79c984b28c36a5413be974b6a59.setContent(html_3594c884449ed31000a394cc44c6abef);
+            
+        
+
+        marker_d6eca33b20586e60d1581bf6cfb5a1b6.bindPopup(popup_1fb7a79c984b28c36a5413be974b6a59)
+        ;
+
+        
+    
+    
+            var marker_bb46e9e54fe065ef2420fa65b132cca7 = L.marker(
+                [51.6536, 39.2108],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_ef1a0de53b9dd47506fa7f505a484b00 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_49f8550fcffcb321daedbf8db8704380 = $(`<div id="html_49f8550fcffcb321daedbf8db8704380" style="width: 100.0%; height: 100.0%;">Иван Бунин</div>`)[0];
+                popup_ef1a0de53b9dd47506fa7f505a484b00.setContent(html_49f8550fcffcb321daedbf8db8704380);
+            
+        
+
+        marker_bb46e9e54fe065ef2420fa65b132cca7.bindPopup(popup_ef1a0de53b9dd47506fa7f505a484b00)
+        ;
+
+        
+    
+    
+            var marker_d09d429a2a393bf7380eb5360ef851e5 = L.marker(
+                [53.8833, 46.7333],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_4001c1013eec803eb993d063966e85fe = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_224f8e687b836bb3f95e3db389c9b369 = $(`<div id="html_224f8e687b836bb3f95e3db389c9b369" style="width: 100.0%; height: 100.0%;">Александр Куприн</div>`)[0];
+                popup_4001c1013eec803eb993d063966e85fe.setContent(html_224f8e687b836bb3f95e3db389c9b369);
+            
+        
+
+        marker_d09d429a2a393bf7380eb5360ef851e5.bindPopup(popup_4001c1013eec803eb993d063966e85fe)
+        ;
+
+        
+    
+    
+            var marker_0a37dbf1be78d89e2195fdf98fd82726 = L.marker(
+                [52.9667, 36.0667],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_379b781893b6b27994cc1a13260053b6 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_0283648a9148f90a33f5e8b755b15d67 = $(`<div id="html_0283648a9148f90a33f5e8b755b15d67" style="width: 100.0%; height: 100.0%;">Иван Тургенев</div>`)[0];
+                popup_379b781893b6b27994cc1a13260053b6.setContent(html_0283648a9148f90a33f5e8b755b15d67);
+            
+        
+
+        marker_0a37dbf1be78d89e2195fdf98fd82726.bindPopup(popup_379b781893b6b27994cc1a13260053b6)
+        ;
+
+        
+    
+    
+            var marker_09c6b4e11d154365007956336e596482 = L.marker(
+                [51.6536, 39.2108],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_5c4f09a4ed63490af4643be76e5d2086 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_e976ae7f533d5ee99c28af6d58e71dd7 = $(`<div id="html_e976ae7f533d5ee99c28af6d58e71dd7" style="width: 100.0%; height: 100.0%;">Иван Бунин</div>`)[0];
+                popup_5c4f09a4ed63490af4643be76e5d2086.setContent(html_e976ae7f533d5ee99c28af6d58e71dd7);
+            
+        
+
+        marker_09c6b4e11d154365007956336e596482.bindPopup(popup_5c4f09a4ed63490af4643be76e5d2086)
+        ;
+
+        
+    
+    
+            var marker_0a22ff5f8472fc127d7b50b6e2baa4f3 = L.marker(
+                [53.8833, 46.7333],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_4b48971d0c5fda059c7fb2e663fbdbd9 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_cb152a641bc664203e81023de23c115d = $(`<div id="html_cb152a641bc664203e81023de23c115d" style="width: 100.0%; height: 100.0%;">Александр Куприн</div>`)[0];
+                popup_4b48971d0c5fda059c7fb2e663fbdbd9.setContent(html_cb152a641bc664203e81023de23c115d);
+            
+        
+
+        marker_0a22ff5f8472fc127d7b50b6e2baa4f3.bindPopup(popup_4b48971d0c5fda059c7fb2e663fbdbd9)
+        ;
+
+        
+    
+    
+            var marker_9fd76ad6680f172d573869ca9cc8412a = L.marker(
+                [52.9667, 36.0667],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_d86b16162412a552f3303f24787d2188 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_364d5623231889ab70eef01e5d6c9a74 = $(`<div id="html_364d5623231889ab70eef01e5d6c9a74" style="width: 100.0%; height: 100.0%;">Иван Тургенев</div>`)[0];
+                popup_d86b16162412a552f3303f24787d2188.setContent(html_364d5623231889ab70eef01e5d6c9a74);
+            
+        
+
+        marker_9fd76ad6680f172d573869ca9cc8412a.bindPopup(popup_d86b16162412a552f3303f24787d2188)
+        ;
+
+        
+    
+    
+            var marker_008f648688f3ed10813c64e9945c4881 = L.marker(
+                [51.6536, 39.2108],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_2ceddb79f65a522d147ddc390b5e3ece = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_131a8654c4957acda4f559e7c074cb55 = $(`<div id="html_131a8654c4957acda4f559e7c074cb55" style="width: 100.0%; height: 100.0%;">Иван Бунин</div>`)[0];
+                popup_2ceddb79f65a522d147ddc390b5e3ece.setContent(html_131a8654c4957acda4f559e7c074cb55);
+            
+        
+
+        marker_008f648688f3ed10813c64e9945c4881.bindPopup(popup_2ceddb79f65a522d147ddc390b5e3ece)
+        ;
+
+        
+    
+    
+            var marker_a2a188689aa915cd4461af7aaa55499b = L.marker(
+                [53.8833, 46.7333],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_ee9ce46054086ec1dbde99d02ddbb8a3 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_e4cbd4953d87795eda4bfcc030af916f = $(`<div id="html_e4cbd4953d87795eda4bfcc030af916f" style="width: 100.0%; height: 100.0%;">Александр Куприн</div>`)[0];
+                popup_ee9ce46054086ec1dbde99d02ddbb8a3.setContent(html_e4cbd4953d87795eda4bfcc030af916f);
+            
+        
+
+        marker_a2a188689aa915cd4461af7aaa55499b.bindPopup(popup_ee9ce46054086ec1dbde99d02ddbb8a3)
+        ;
+
+        
+    
+    
+            var marker_64ad1bb3f5cc4b24a32d4e6c06a46140 = L.marker(
+                [52.9667, 36.0667],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_0df97487c59a321aed75df56e86e12b2 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_d02ab1843779821e22f43adc16267d9b = $(`<div id="html_d02ab1843779821e22f43adc16267d9b" style="width: 100.0%; height: 100.0%;">Иван Тургенев</div>`)[0];
+                popup_0df97487c59a321aed75df56e86e12b2.setContent(html_d02ab1843779821e22f43adc16267d9b);
+            
+        
+
+        marker_64ad1bb3f5cc4b24a32d4e6c06a46140.bindPopup(popup_0df97487c59a321aed75df56e86e12b2)
+        ;
+
+        
+    
+    
+            var marker_8fd1989ae3837f09b5d1f5a357db44c6 = L.marker(
+                [51.6536, 39.2108],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_a91f7f7d36dc7dcd03fab9fd704325db = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_7b124dc3a05d9842cc30031230901634 = $(`<div id="html_7b124dc3a05d9842cc30031230901634" style="width: 100.0%; height: 100.0%;">Иван Бунин</div>`)[0];
+                popup_a91f7f7d36dc7dcd03fab9fd704325db.setContent(html_7b124dc3a05d9842cc30031230901634);
+            
+        
+
+        marker_8fd1989ae3837f09b5d1f5a357db44c6.bindPopup(popup_a91f7f7d36dc7dcd03fab9fd704325db)
+        ;
+
+        
+    
+    
+            var marker_a0bf6706a64629ccc9cf4ebc27c37c00 = L.marker(
+                [53.8833, 46.7333],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_cc8383cc34f234c2ba6a3ea807f1990b = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_eb2f177101d68a52c68096f0ac969b0a = $(`<div id="html_eb2f177101d68a52c68096f0ac969b0a" style="width: 100.0%; height: 100.0%;">Александр Куприн</div>`)[0];
+                popup_cc8383cc34f234c2ba6a3ea807f1990b.setContent(html_eb2f177101d68a52c68096f0ac969b0a);
+            
+        
+
+        marker_a0bf6706a64629ccc9cf4ebc27c37c00.bindPopup(popup_cc8383cc34f234c2ba6a3ea807f1990b)
+        ;
+
+        
+    
+    
+            var marker_045e89a77cd40f3dac2f22d5d53c7cd4 = L.marker(
+                [52.9667, 36.0667],
+                {}
+            ).addTo(map_30f86e479c5176b62dce9eda658c1cbb);
+        
+    
+        var popup_10679992087376dc3f2cdc5411ad39fb = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_af2c6576272e00d3d99f86705de423b8 = $(`<div id="html_af2c6576272e00d3d99f86705de423b8" style="width: 100.0%; height: 100.0%;">Иван Тургенев</div>`)[0];
+                popup_10679992087376dc3f2cdc5411ad39fb.setContent(html_af2c6576272e00d3d99f86705de423b8);
+            
+        
+
+        marker_045e89a77cd40f3dac2f22d5d53c7cd4.bindPopup(popup_10679992087376dc3f2cdc5411ad39fb)
+        ;
+
+        
+    
+</script>
+</html>
