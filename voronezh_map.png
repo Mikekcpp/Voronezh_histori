@@ -25,7 +25,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_94aeba08c950205401863e3cf27a35f2 {
+                #map_24d6f27d32264dccae4c99d99e083360 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -39,14 +39,14 @@
 <body>
     
     
-            <div class="folium-map" id="map_94aeba08c950205401863e3cf27a35f2" ></div>
+            <div class="folium-map" id="map_24d6f27d32264dccae4c99d99e083360" ></div>
         
 </body>
 <script>
     
     
-            var map_94aeba08c950205401863e3cf27a35f2 = L.map(
-                "map_94aeba08c950205401863e3cf27a35f2",
+            var map_24d6f27d32264dccae4c99d99e083360 = L.map(
+                "map_24d6f27d32264dccae4c99d99e083360",
                 {
                     center: [51.6536, 39.2108],
                     crs: L.CRS.EPSG3857,
@@ -60,79 +60,37 @@
 
         
     
-            var tile_layer_cf6ff608eeb4947052d32d39558ec290 = L.tileLayer(
+            var tile_layer_706925c3c46ba25828036563e94836bb = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
             );
         
     
-            tile_layer_cf6ff608eeb4947052d32d39558ec290.addTo(map_94aeba08c950205401863e3cf27a35f2);
+            tile_layer_706925c3c46ba25828036563e94836bb.addTo(map_24d6f27d32264dccae4c99d99e083360);
         
     
-            var marker_37dc556f2069dadc07f874b5718e6851 = L.marker(
+            var marker_31a28330f1f68c0a8d481dd808024d6b = L.marker(
                 [51.6536, 39.2108],
                 {}
-            ).addTo(map_94aeba08c950205401863e3cf27a35f2);
+            ).addTo(map_24d6f27d32264dccae4c99d99e083360);
         
     
-        var popup_ca7ec0f751d14da3f671c2909e24d0bc = L.popup({"maxWidth": "100%"});
+        var popup_0347d705a7519fe0ad35424e7188f7bb = L.popup({"maxWidth": "100%"});
 
         
             
-                var html_3d792a12cf45a813029b8d6f4863a7c3 = $(`<div id="html_3d792a12cf45a813029b8d6f4863a7c3" style="width: 100.0%; height: 100.0%;">Воронеж</div>`)[0];
-                popup_ca7ec0f751d14da3f671c2909e24d0bc.setContent(html_3d792a12cf45a813029b8d6f4863a7c3);
+                var html_ffa8556606e78c2d1c1b655a7a1d547c = $(`<div id="html_ffa8556606e78c2d1c1b655a7a1d547c" style="width: 100.0%; height: 100.0%;">Воронеж</div>`)[0];
+                popup_0347d705a7519fe0ad35424e7188f7bb.setContent(html_ffa8556606e78c2d1c1b655a7a1d547c);
             
         
 
-        marker_37dc556f2069dadc07f874b5718e6851.bindPopup(popup_ca7ec0f751d14da3f671c2909e24d0bc)
+        marker_31a28330f1f68c0a8d481dd808024d6b.bindPopup(popup_0347d705a7519fe0ad35424e7188f7bb)
         ;
 
         
     
     
-            var marker_c3a6068d14729f7b9ac701d9de994b26 = L.marker(
-                [51.6586, 39.2088],
-                {}
-            ).addTo(map_94aeba08c950205401863e3cf27a35f2);
-        
-    
-        var popup_a40fa63246542db16918fc149f677ed9 = L.popup({"maxWidth": "100%"});
-
-        
-            
-                var html_bfce45b3afc972d67342fa7bf5526496 = $(`<div id="html_bfce45b3afc972d67342fa7bf5526496" style="width: 100.0%; height: 100.0%;">Дом-музей Ивана Бунина</div>`)[0];
-                popup_a40fa63246542db16918fc149f677ed9.setContent(html_bfce45b3afc972d67342fa7bf5526496);
-            
-        
-
-        marker_c3a6068d14729f7b9ac701d9de994b26.bindPopup(popup_a40fa63246542db16918fc149f677ed9)
-        ;
-
-        
-    
-    
-            var marker_4fa68672d3da71356af1ec4a9ea8b648 = L.marker(
-                [51.6556, 39.2058],
-                {}
-            ).addTo(map_94aeba08c950205401863e3cf27a35f2);
-        
-    
-        var popup_37a4fed74357d35046abcdf8867b1c02 = L.popup({"maxWidth": "100%"});
-
-        
-            
-                var html_aad905ed29d24800fee839c66b4b83ba = $(`<div id="html_aad905ed29d24800fee839c66b4b83ba" style="width: 100.0%; height: 100.0%;">Памятник Александру Куприну</div>`)[0];
-                popup_37a4fed74357d35046abcdf8867b1c02.setContent(html_aad905ed29d24800fee839c66b4b83ba);
-            
-        
-
-        marker_4fa68672d3da71356af1ec4a9ea8b648.bindPopup(popup_37a4fed74357d35046abcdf8867b1c02)
-        ;
-
-        
-    
-    
-            map_94aeba08c950205401863e3cf27a35f2.fitBounds(
+            map_24d6f27d32264dccae4c99d99e083360.fitBounds(
                 [[51.5, 39.0], [51.8, 39.5]],
                 {}
             );

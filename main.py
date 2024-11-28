@@ -1,135 +1,147 @@
-import kivy
 from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
-from kivy.uix.boxlayout import BoxLayout
-import sqlite3
-import folium
 from kivy.uix.popup import Popup
+from kivy.uix.image import Image
+from kivy.uix.floatlayout import FloatLayout
+from kivy.garden.drawer import DrawerLayout
+import sqlite3
 
-# Создаем базу данных с информацией о писателях
-conn = sqlite3.connect('writers.db')
-cursor = conn.cursor()
 
-# Проверяем, существует ли таблица writers
-cursor.execute('''
-    SELECT name
-    FROM sqlite_master
-    WHERE type='table' AND name='writers'
-''')
-
-if cursor.fetchone() is None:
-    # Если таблица не существует, создаем ее
-    cursor.execute('''
-        CREATE TABLE writers (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            biography TEXT NOT NULL,
-            birthplace TEXT NOT NULL,
-            deathplace TEXT NOT NULL,
-            photo BLOB NOT NULL
-        )
-    ''')
-
-# Добавляем писателей в базу данных
-writers = [
-    ('Иван Бунин', 'Русский писатель', 'Воронеж', 'Париж', 'bunin.jpg'),
-    ('Александр Куприн', 'Русский писатель', 'Наровчат', 'Ленинград', 'kuprin.jpg'),
-    ('Иван Тургенев', 'Русский писатель', 'Орёл', 'Буживаль', 'turgenev.jpg')
-]
-
-cursor.executemany('INSERT OR IGNORE INTO writers VALUES (NULL, ?, ?, ?, ?, ?)', writers)
-
-conn.commit()
-conn.close()
-
-# Создаем базу данных с рейтингом
+# Создание базы данных для рейтинга
 conn = sqlite3.connect('rating.db')
 cursor = conn.cursor()
 
-# Проверяем, существует ли таблица rating
 cursor.execute('''
-    SELECT name
-    FROM sqlite_master
-    WHERE type='table' AND name='rating'
+    CREATE TABLE IF NOT EXISTS rating (
+        id INTEGER PRIMARY KEY,
+        user TEXT,
+        score INTEGER
+    )
 ''')
 
-if cursor.fetchone() is None:
-    # Если таблица не существует, создаем ее
-    cursor.execute('''
-        CREATE TABLE rating (
-            id INTEGER PRIMARY KEY,
-            user TEXT NOT NULL,
-            score INTEGER NOT NULL
-        )
-    ''')
+conn.commit()
+conn.close()
 
-# Добавляем пользователя в базу данных
-cursor.execute('INSERT OR IGNORE INTO rating VALUES (NULL, ?, 0)', ('Пользователь 1',))
+# Создание базы данных для писателей
+conn = sqlite3.connect('writers.db')
+cursor = conn.cursor()
+
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS writers (
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        biography TEXT,
+        birthplace TEXT,
+        deathplace TEXT,
+        photo TEXT
+    )
+''')
 
 conn.commit()
 conn.close()
 
 
-class WriterGame(App):
-    def build(self):
-        self.layout = BoxLayout(orientation='vertical')
+class WriterGame(BoxLayout):
+    def __init__(self, **kwargs):
+        super(WriterGame, self).__init__(**kwargs)
+        self.orientation = 'vertical'
 
         label = Label(text='Кто является автором произведения "Окаянные дни"?')
-        self.layout.add_widget(label)
+        self.add_widget(label)
 
         button1 = Button(text='Иван Бунин')
         button1.bind(on_press=self.check_answer)
-        self.layout.add_widget(button1)
+        self.add_widget(button1)
 
         button2 = Button(text='Александр Куприн')
         button2.bind(on_press=self.check_answer)
-        self.layout.add_widget(button2)
+        self.add_widget(button2)
 
         button3 = Button(text='Иван Тургенев')
         button3.bind(on_press=self.check_answer)
-        self.layout.add_widget(button3)
-
-        return self.layout
+        self.add_widget(button3)
 
     def check_answer(self, instance):
         if instance.text == 'Иван Бунин':
             popup = Popup(title='Результат', content=Label(text='Правильно!'), size_hint=(None, None), size=(200, 100))
             popup.open()
+            self.update_score()
         else:
-            popup = Popup(title='Результат', content=Label(text='Неправильно!'), size_hint=(None, None), size=(200, 100))
+            popup = Popup(title='Результат', content=Label(text='Неправильно!'), size_hint=(None, None),
+                          size=(200, 100))
             popup.open()
 
-    def show_map(self, instance):
-        m = folium.Map(location=[51.6536, 39.2108], zoom_start=12)
-        folium.Marker([51.6536, 39.2108], popup='Воронеж').add_to(m)
-        m.save('voronezh_map.html')
-        webbrowser.open('voronezh_map.html')
+    def update_score(self):
+        conn = sqlite3.connect('rating.db')
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT * FROM rating')
+        rating = cursor.fetchall()
+
+        for user in rating:
+            if user[1] == 'Пользователь 1':
+                new_score = user[2] + 1
+                cursor.execute('UPDATE rating SET score = ? WHERE user = ?', (new_score, 'Пользователь 1'))
+
+        conn.commit()
+        conn.close()
+
+
+class MapWidget(FloatLayout):
+    def __init__(self, **kwargs):
+        super(MapWidget, self).__init__(**kwargs)
+        self.map_image = Image(source='photo_5352626336243509126_y.jpg', allow_stretch=True, keep_ratio=False)
+        self.add_widget(self.map_image)
+
+    def add_marker(self, x, y, text):
+        marker = Label(text=text, font_size=20, color=(1, 0, 0, 1), pos=(x, y))
+        self.add_widget(marker)
 
 
 class WriterApp(App):
     def build(self):
-        self.layout = BoxLayout(orientation='vertical')
+        layout = DrawerLayout()
 
-        label = Label(text='Нескучный Литературный Воронеж')
-        self.layout.add_widget(label)
+        self.map_image = Image(source='photo_5352626336243509126_y.jpg', allow_stretch=True, keep_ratio=False,
+                               size_hint=(1, 1))
+        layout.add_widget(self.map_image)
 
-        button1 = Button(text='Играть')
-        button1.bind(on_press=self.play_game)
-        self.layout.add_widget(button1)
+        drawer = BoxLayout(orientation='vertical')
+        layout.add_widget(drawer)
 
-        button2 = Button(text='Рейтинг')
-        button2.bind(on_press=self.show_rating)
-        self.layout.add_widget(button2)
+        button1 = Button(text='Рейтинг')
+        button1.bind(on_press=self.show_rating)
+        drawer.add_widget(button1)
 
-        button3 = Button(text='Карта')
-        button3.bind(on_press=self.show_map)
-        self.layout.add_widget(button3)
+        button2 = Button(text='Писатели')
+        button2.bind(on_press=self.show_writers)
+        drawer.add_widget(button2)
 
-        return self.layout
+        button3 = Button(text='Добавить писателя')
+        button3.bind(on_press=self.add_writer)
+        drawer.add_widget(button3)
+
+        button4 = Button(text='Библиотека')
+        button4.bind(on_press=self.show_library)
+        drawer.add_widget(button4)
+
+        button5 = Button(text='Форум')
+        button5.bind(on_press=self.show_forum)
+        drawer.add_widget(button5)
+
+        button6 = Button(text='Профиль')
+        button6.bind(on_press=self.show_profile)
+        drawer.add_widget(button6)
+
+        return layout
+
 
     def play_game(self, instance):
-        WriterGame().run()
+        game = WriterGame()
+        popup = Popup(title='Игра', content=game, size_hint=(None, None), size=(400, 300))
+        popup.open()
 
     def show_rating(self, instance):
         conn = sqlite3.connect('rating.db')
@@ -147,29 +159,200 @@ class WriterApp(App):
         popup.open()
 
     def show_map(self, instance):
-        m = folium.Map(location=[51.6536, 39.2108], zoom_start=12)
+        # Создаём popup с картой
+        popup = Popup(title='Карта', size_hint=(0.9 , 0.9))
+        layout = FloatLayout()
+        self.map_image = Image(source='photo_5352626336243509126_y.jpg', allow_stretch=True, keep_ratio=False)
+        layout.add_widget(self.map_image)
+        popup.add_widget(layout)
+        popup.open()
 
+    def add_writer(self, instance):
+        popup = Popup(title='Добавить писателя', size_hint=(None, None), size=(200, 200))
+        layout = BoxLayout(orientation='vertical')
+        name_input = Label(text='Имя писателя')
+        layout.add_widget(name_input)
+        biography_input = Label(text='Биография писателя')
+        layout.add_widget(biography_input)
+        birthplace_input = Label(text='Место рождения писателя')
+        layout.add_widget(birthplace_input)
+        deathplace_input = Label(text='Место смерти писателя')
+        layout.add_widget(deathplace_input)
+        photo_input = Label(text='Фото писателя')
+        layout.add_widget(photo_input)
+        button = Button(text='Добавить')
+        button.bind(on_press=self.add_writer_to_db)
+        layout.add_widget(button)
+        popup.add_widget(layout)
+        popup.open()
+
+    def add_writer_to_db(self, instance):
+        conn = sqlite3.connect('writers.db')
+        cursor = conn.cursor()
+
+        cursor.execute('INSERT INTO writers VALUES (NULL, ?, ?, ?, ?, ?)',
+                       ('Иван Бунин', 'Русский писатель', 'Воронеж', 'Париж', 'bunin.jpg'))
+
+        conn.commit()
+        conn.close()
+
+    def show_writers(self, instance):
         conn = sqlite3.connect('writers.db')
         cursor = conn.cursor()
 
         cursor.execute('SELECT * FROM writers')
         writers = cursor.fetchall()
 
+        popup = Popup(title='Писатели', size_hint=(None, None), size=(200, 200))
+        layout = BoxLayout(orientation='vertical')
         for writer in writers:
-            if writer[3] == 'Воронеж':
-                folium.Marker([51.6536, 39.2108], popup=writer[1]).add_to(m)
-            elif writer[3] == 'Наровчат':
-                folium.Marker([53.8833, 46.7333], popup=writer[1]).add_to(m)
-            elif writer[3] == 'Орёл':
-                folium.Marker([52.9667, 36.0667], popup=writer[1]).add_to(m)
+            label = Label(text=f'{writer[1]} - {writer[2]}')
+            layout.add_widget(label)
+        popup.add_widget(layout)
+        popup.open()
 
-        m.save('voronezh_map.html')
-        popup = Popup(title='Карта', content=Label(text='Карта сохранена в файле voronezh_map.html'),
-                      size_hint=(None, None), size=(200, 100))
+    def play_quiz(self, instance):
+        popup = Popup(title='Викторина', size_hint=(None, None), size=(200, 200))
+        layout = BoxLayout(orientation='vertical')
+        question_label = Label(text='Кто является автором произведения "Окаянные дни"?')
+        layout.add_widget(question_label)
+        button1 = Button(text='Иван Бунин')
+        button1.bind(on_press=self.check_answer)
+        layout.add_widget(button1)
+        button2 = Button(text='Александр Куприн')
+        button2.bind(on_press=self.check_answer)
+        layout.add_widget(button2)
+        button3 = Button(text='Иван Тургенев')
+        button3.bind(on_press=self.check_answer)
+        layout.add_widget(button3)
+        popup.add_widget(layout)
+        popup.open()
+
+    def check_answer(self, instance):
+        if instance.text == 'Иван Бунин':
+            popup = Popup(title='Результат', content=Label(text='Правильно!'), size_hint=(None, None), size=(200, 100))
+            popup.open()
+            self.update_score()
+        else:
+            popup = Popup(title='Результат', content=Label(text='Неправильно!'), size_hint=(None, None),
+                          size=(200, 100))
+            popup.open()
+
+    def update_score(self):
+        conn = sqlite3.connect('rating.db')
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT * FROM rating')
+        rating = cursor.fetchall()
+
+        for user in rating:
+            if user[1] == 'Пользователь 1':
+                new_score = user[2] + 1
+                cursor.execute('UPDATE rating SET score = ? WHERE user = ?', (new_score, 'Пользователь 1'))
+
+        conn.commit()
+        conn.close()
+
+    def play_quests(self, instance):
+        popup = Popup(title='Квесты', size_hint=(None, None), size=(200, 200))
+        layout = BoxLayout(orientation='vertical')
+        quest_label = Label(text='Найдите дом-музей Ивана Бунина')
+        layout.add_widget(quest_label)
+        button = Button(text='Найти')
+        button.bind(on_press=self.find_quest)
+        layout.add_widget(button)
+        popup.add_widget(layout)
         popup.open()
 
 
+    def find_quest(self, instance):
+        popup = Popup(title='Результат', content=Label(text='Вы нашли дом-музей Ивана Бунина!'), size_hint=(None, None),
+                      size=(200, 100))
+        popup.open()
+        self.update_score()
+
+    def play_game_mode(self, instance):
+        popup = Popup(title='Игровой режим', size_hint=(None, None), size=(200, 200))
+        layout = BoxLayout(orientation='vertical')
+        game_label = Label(text='Выберите персонажа')
+        layout.add_widget(game_label)
+        button1 = Button(text='Иван Бунин')
+        button1.bind(on_press=self.choose_character)
+        layout.add_widget(button1)
+        button2 = Button(text='Александр Куприн')
+        button2.bind(on_press=self.choose_character)
+        layout.add_widget(button2)
+        popup.add_widget(layout)
+        popup.open()
+
+    def choose_character(self, instance):
+        popup = Popup(title='Выбранный персонаж', content=Label(text=f'Вы выбрали {instance.text}'),
+                      size_hint=(None, None),
+                      size=(200, 100))
+        popup.open()
+        self.start_game()
+
+    def start_game(self):
+        popup = Popup(title='Игровой режим', size_hint=(None, None), size=(200, 200))
+        layout = BoxLayout(orientation='vertical')
+        game_label = Label(text='Вы находитесь в Воронеже')
+        layout.add_widget(game_label)
+        button = Button(text='Идти в дом-музей Ивана Бунина')
+        button.bind(on_press=self.go_to_museum)
+        layout.add_widget(button)
+        popup.add_widget(layout)
+        popup.open()
+
+    def go_to_museum(self, instance):
+        popup = Popup(title='Дом-музей Ивана Бунина', content=Label(text='Вы пришли в дом-музей Ивана Бунина'),
+                      size_hint=(None, None),
+                      size=(200, 100))
+        popup.open()
+        self.update_score()
+
+    def show_library(self, instance):
+        popup = Popup(title='Библиотека', size_hint=(None, None), size=(200, 200))
+        layout = BoxLayout(orientation='vertical')
+        library_label = Label(text='Выберите книгу')
+        layout.add_widget(library_label)
+        button1 = Button(text='Окаянные дни')
+        button1.bind(on_press=self.read_book)
+        layout.add_widget(button1)
+        button2 = Button(text='Поединок')
+        button2.bind(on_press=self.read_book)
+        layout.add_widget(button2)
+        popup.add_widget(layout)
+        popup.open()
+
+    def read_book(self, instance):
+        popup = Popup(title='Книга', content=Label(text=f'Вы прочитали {instance.text}'), size_hint=(None, None),
+                      size=(200, 100))
+        popup.open()
+        self.update_score()
+
+    def show_forum(self, instance):
+        popup = Popup(title='Форум', size_hint=(None, None), size=(200, 200))
+        layout = BoxLayout(orientation='vertical')
+        forum_label = Label(text='Обсуждение книг')
+        layout.add_widget(forum_label)
+        button = Button(text='Прочитать обсуждение')
+        button.bind(on_press=self.read_discussion)
+        layout.add_widget(button)
+        popup.add_widget(layout)
+        popup.open()
+
+    def read_discussion(self, instance):
+        popup = Popup(title='Обсуждение', content=Label(text='Вы прочитали обсуждение'), size_hint=(None, None),
+                      size=(200, 100))
+        popup.open()
+        self.update_score()
 
 if __name__ == '__main__':
     WriterApp().run()
+
+
+
+
+
+
 
