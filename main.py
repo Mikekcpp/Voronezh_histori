@@ -109,8 +109,6 @@ class MainWindow(QWidget):
         self.hide()
 
 
-
-
 class AuthWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -118,32 +116,56 @@ class AuthWindow(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.setGeometry(300, 300, 300, 200)
+        self.setGeometry(300, 300, 350, 250)  # Увеличиваем размер окна
+        self.setFixedSize(350, 250)  # Делаем окно не растягиваемым
         self.setWindowTitle('Авторизация')
 
+        # Добавляем картинку на фоне
+        self.background = QLabel(self)
+        self.background.setGeometry(0, 0, 350, 250)  # Увеличиваем размер картинки
+        pixmap = QPixmap('1.jpg')
+        pixmap = pixmap.scaled(450, 350, Qt.KeepAspectRatio)  # Увеличиваем размер картинки
+        self.background.setPixmap(pixmap)
+
         layout = QVBoxLayout()
+        layout.setContentsMargins(20, 20, 20, 20)  # Добавляем отступы
+
         label = QLabel('Введите почту и пароль')
+        label.setStyleSheet("color: #453530;")  # Делаем надпись коричневой
         layout.addWidget(label)
+
+        # Добавляем надписи в поле ввода
         self.emailInput = QLineEdit()
+        self.emailInput.setPlaceholderText("Email")
+        self.emailInput.setStyleSheet("background-color: rgba(255, 255, 255, 0.5); border-radius: 10px; padding: 5px;")
+        layout.addWidget(self.emailInput)
+
         self.passwordInput = QLineEdit()
         self.passwordInput.setEchoMode(QLineEdit.Password)
-        layout.addWidget(QLabel('Почта'))
-        layout.addWidget(self.emailInput)
-        layout.addWidget(QLabel('Пароль'))
+        self.passwordInput.setPlaceholderText("Пароль")
+        self.passwordInput.setStyleSheet("background-color: rgba(255, 255, 255, 0.5); border-radius: 10px; padding: 5px;")
         layout.addWidget(self.passwordInput)
 
         buttonLayout = QHBoxLayout()
         loginButton = QPushButton('Войти')
         loginButton.clicked.connect(self.login)
+        loginButton.setStyleSheet("background-color: #453530; color: white; border-radius: 10px; padding: 5px;")
         buttonLayout.addWidget(loginButton)
 
         registerButton = QPushButton('Регистрация')
         registerButton.clicked.connect(self.register)
+        registerButton.setStyleSheet("background-color: #453530; color: white; border-radius: 10px; padding: 5px;")
         buttonLayout.addWidget(registerButton)
 
         layout.addLayout(buttonLayout)
 
-        self.setLayout(layout)
+        container = QWidget(self)
+        container.setGeometry(0, 0, 350, 250)
+        container.setLayout(layout)
+        container.setStyleSheet("background-color: transparent;")  # Делаем контейнер прозрачным
+
+        self.background.lower()  # Перемещаем картинку на задний план
+        container.raise_()  # Перемещаем контейнер на передний план
 
     def login(self):
         email = self.emailInput.text()
@@ -152,10 +174,10 @@ class AuthWindow(QWidget):
         if not email or not password:
             QMessageBox.information(self, 'Ошибка', 'Введите почту и пароль')
             return
-        if 'gmail.com' not in email or 'yandex.ru' not in email:
+        if '@' not in email:
             QMessageBox.information(self, 'Ошибка', 'Введите корректную почту!')
             return
-        if len(password) < 6:
+        if len(password) < 6 or '123456' in password:
             QMessageBox.information(self, 'Ошибка', 'Введите корректный пароль! '
                                                     'Пароль должен содержать не меньше 6 символов!')
             return
@@ -181,10 +203,10 @@ class AuthWindow(QWidget):
         if not email or not password:
             QMessageBox.information(self, 'Ошибка', 'Введите почту и пароль')
             return
-        if 'gmail.com' not in email or 'yandex.ru' not in email:
+        if '@' not in email:
             QMessageBox.information(self, 'Ошибка', 'Введите корректную почту!')
             return
-        if len(password) < 6:
+        if len(password) < 6 or '123456' in password :
             QMessageBox.information(self, 'Ошибка', 'Введите корректный пароль! '
                                                     'Пароль должен содержать не меньше 6 символов!')
             return
