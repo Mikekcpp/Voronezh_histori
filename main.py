@@ -1,55 +1,46 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit, QMessageBox, \
-    QTabWidget, QHBoxLayout, QInputDialog
-from PyQt5.QtGui import *
+from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit,
+                             QMessageBox, QTabWidget, QHBoxLayout, QInputDialog, QScrollArea, QTextBrowser)
 from PyQt5.QtCore import Qt
-import sqlite3
+from PyQt5.QtGui import *
+import sqlite3, sys
 import random
+
+from database import *
 
 # Создание базы данных с пользователями и вопросами
 conn = sqlite3.connect("users.db")
 cursor = conn.cursor()
 
 cursor.execute(
-    """
-    CREATE TABLE IF NOT EXISTS writers (
-        id INTEGER PRIMARY KEY,
-        name TEXT,
-        book TEXT,
-        year INTEGER
-    )
-"""
-)
+    '''  
+        CREATE TABLE IF NOT EXISTS writers (
+            id INTEGER PRIMARY KEY,
+            name TEXT,
+            book TEXT,
+            year INTEGER
+        )
+    ''')
 
 cursor.execute(
-    """
-    CREATE TABLE IF NOT EXISTS users (
+    '''CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY,
         email TEXT,
         password TEXT,
         score INTEGER
-    )
-"""
+    )''')
+
+cursor.execute(
+    ''' DROP TABLE IF EXISTS questions'''
 )
 
 cursor.execute(
-    """
-    DROP TABLE IF EXISTS questions
-"""
-)
-
-cursor.execute(
-    """
-    CREATE TABLE IF NOT EXISTS questions (
+    '''CREATE TABLE IF NOT EXISTS questions (
         id INTEGER PRIMARY KEY,
         question TEXT,
         answer TEXT,
         difficulty INTEGER,
         score INTEGER
-    )
-"""
-)
-
+    )''')
 
 # Добавление вопросов в базу данных
 questions = [
@@ -64,7 +55,6 @@ questions = [
 for question, answer, difficulty, score in questions:
     cursor.execute("INSERT OR IGNORE INTO questions (question, answer, difficulty, score) VALUES (?, ?, ?, ?)",
                    (question, answer, difficulty, score))
-
 
 conn.commit()
 conn.close()
@@ -143,7 +133,8 @@ class AuthWindow(QWidget):
         self.passwordInput = QLineEdit()
         self.passwordInput.setEchoMode(QLineEdit.Password)
         self.passwordInput.setPlaceholderText("Пароль")
-        self.passwordInput.setStyleSheet("background-color: rgba(255, 255, 255, 0.5); border-radius: 10px; padding: 5px;")
+        self.passwordInput.setStyleSheet(
+            "background-color: rgba(255, 255, 255, 0.5); border-radius: 10px; padding: 5px;")
         layout.addWidget(self.passwordInput)
 
         buttonLayout = QHBoxLayout()
@@ -182,7 +173,6 @@ class AuthWindow(QWidget):
                                                     'Пароль должен содержать не меньше 6 символов!')
             return
 
-
         conn = sqlite3.connect("users.db")
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM users WHERE email = ? AND password = ?", (email, password))
@@ -190,6 +180,7 @@ class AuthWindow(QWidget):
 
         if user:
             self.mainWindow = MainWindowWithTabs()
+            self.mainWindow.quizWindow.userId = user[0]  # сохраните ID пользователя
             self.mainWindow.show()
             self.hide()
         else:
@@ -206,7 +197,7 @@ class AuthWindow(QWidget):
         if '@' not in email:
             QMessageBox.information(self, 'Ошибка', 'Введите корректную почту!')
             return
-        if len(password) < 6 or '123456' in password :
+        if len(password) < 6 or '123456' in password:
             QMessageBox.information(self, 'Ошибка', 'Введите корректный пароль! '
                                                     'Пароль должен содержать не меньше 6 символов!')
             return
@@ -234,6 +225,7 @@ class AuthWindow(QWidget):
         except sqlite3.Error as e:
             QMessageBox.information(self, 'Ошибка', 'Ошибка при работе с базой данных: ' + str(e))
 
+
 class MainWindowWithTabs(QWidget):
     def __init__(self):
         super().__init__()
@@ -241,7 +233,7 @@ class MainWindowWithTabs(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.setGeometry(200, 200, 400, 300)  # измените размер окна
+        self.setGeometry(200, 200, 400, 300)  # установите начальный размер окна
         self.setWindowTitle('Литературное путешествие по Воронежу')
         layout = QVBoxLayout()
         self.tabWidget = QTabWidget()
@@ -257,7 +249,7 @@ class MainWindowWithTabs(QWidget):
         self.tabWidget.addTab(self.libraryTab, 'Библиотека')
         self.mapTab = MapTab()
         self.tabWidget.addTab(self.mapTab, 'Карта')
-
+        self.show()
 
 
 class MapTab(QWidget):
@@ -268,10 +260,18 @@ class MapTab(QWidget):
 
     def initUI(self):
         layout = QVBoxLayout()
+        self.scrollArea = QScrollArea()
+        self.scrollArea.setWidgetResizable(True)
+        layout.addWidget(self.scrollArea)
+        self.setLayout(layout)
         self.mapImage = QLabel()
         self.mapImage.setPixmap(QPixmap('Карта.png'))
-        layout.addWidget(self.mapImage)
-        self.setLayout(layout)
+        self.mapImage.resize(self.width(), self.height())  # установите размер картинки
+        self.scrollArea.setWidget(self.mapImage)
+
+    def resizeEvent(self, event):
+        self.mapImage.resize(self.width(), self.height())
+        super().resizeEvent(event)
 
 
 class QuizTab(QWidget):
@@ -297,11 +297,11 @@ class QuizTab(QWidget):
 class QuizWindow(QWidget):
     def __init__(self):
         super().__init__()
-
         self.initUI()
         self.score = 0
         self.currentQuestion = 0
         self.questions = self.getQuestions()
+        self.userId = None  # добавьте переменную для хранения ID пользователя
 
     def initUI(self):
         layout = QVBoxLayout()
@@ -315,7 +315,10 @@ class QuizWindow(QWidget):
         self.scoreLabel = QLabel('Счет: 0')
         layout.addWidget(self.scoreLabel)
         self.setLayout(layout)
-        self.showQuestion()
+        if self.questions:
+            self.showQuestion()
+        else:
+            self.questionLabel.setText('Вопросов нет!')
 
     def getQuestions(self):
         conn = sqlite3.connect("users.db")
@@ -340,6 +343,7 @@ class QuizWindow(QWidget):
             if answer.lower() == question[2].lower():
                 self.score += question[4]
                 self.scoreLabel.setText('Счет: ' + str(self.score))
+                self.updateScore()  # обновите значение score в базе данных
                 QMessageBox.information(self, 'Правильно!', 'Вы правильно ответили на вопрос!')
             else:
                 QMessageBox.information(self, 'Неправильно!', 'Вы неправильно ответили на вопрос!')
@@ -349,6 +353,23 @@ class QuizWindow(QWidget):
         else:
             self.questionLabel.setText('Викторина окончена!')
             self.answerInput.setReadOnly(True)
+
+    def updateScore(self):
+        if self.userId is not None:
+            conn = sqlite3.connect("users.db")
+            cursor = conn.cursor()
+            cursor.execute("UPDATE users SET score = ? WHERE id = ?", (self.score, self.userId))
+            conn.commit()
+            conn.close()
+        else:
+            print("ID пользователя не задан")
+
+    def updateScore(self):
+        conn = sqlite3.connect("users.db")
+        cursor = conn.cursor()
+        cursor.execute("UPDATE users SET score = ? WHERE id = ?", (self.score, self.userId))
+        conn.commit()
+        conn.close()
 
 
 class dTab(QWidget):
@@ -374,6 +395,7 @@ class dTab(QWidget):
         else:
             QMessageBox.information(self, 'Ошибка', 'Неправильный пароль администратора')
 
+
 class AddWriterWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -388,7 +410,7 @@ class AddWriterWindow(QWidget):
         self.nameInput.setPlaceholderText('Имя писателя')
         layout.addWidget(self.nameInput)
         self.bookInput = QLineEdit()
-        self.bookInput.setPlaceholderText('Название книг')
+        self.bookInput.setPlaceholderText('Название книги')
         layout.addWidget(self.bookInput)
         self.yearInput = QLineEdit()
         self.yearInput.setPlaceholderText('Годы жизни')
@@ -449,14 +471,114 @@ class LibraryTab(QWidget):
         layout = QVBoxLayout()
         label = QLabel('Библиотека')
         layout.addWidget(label)
-        button = QPushButton('Посмотреть книги')
+        button = QPushButton('Посмотреть добавленные книги')
         button.clicked.connect(self.showBooks)
         layout.addWidget(button)
+        button = QPushButton('Посмотреть книги, с возможностью покупки')
+        button.clicked.connect(self.showBooks_d)
+        layout.addWidget(button)
+        button = QPushButton('Добавить книгу')
+        button.clicked.connect(self.addBook)
+        layout.addWidget(button)
+        self.booksText = QTextBrowser()
+        layout.addWidget(self.booksText)
         self.setLayout(layout)
 
     def showBooks(self):
-        # реализация библиотеки
-        pass
+        conn = sqlite3.connect("users.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT name, book FROM writers")
+        books = cursor.fetchall()
+        conn.close()
+
+        text = ""
+        for book in books:
+            text += f"Автор: {book[0]}\nКнига: {book[1]}\n\n"
+
+        self.booksText.setText(text)
+
+        text = ""
+        for book in books:
+            text += f"Автор: {book[0]}\nКнига: {book[1]}\n\n"
+
+        self.booksText.setText(text)
+
+    def showBooks_d(self):
+        self.booksWindow = BooksWindow()
+        self.booksWindow.show()
+
+    def addBook(self):
+        password, ok = QInputDialog.getText(self, 'Вход', 'Введите пароль администратора')
+        if ok and password == 'admin1':  # замените 'admin' на свой пароль администратора
+            self.addBookWindow = AddBookWindow()
+            self.addBookWindow.show()
+        else:
+            QMessageBox.information(self, 'Ошибка', 'Неправильный пароль администратора')
+
+
+class AddBookWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        layout = QVBoxLayout()
+        label = QLabel('Введите информацию о книге')
+        layout.addWidget(label)
+        self.nameInput = QLineEdit()
+        self.nameInput.setPlaceholderText('Автор')
+        layout.addWidget(self.nameInput)
+        self.bookInput = QLineEdit()
+        self.bookInput.setPlaceholderText('Название книги')
+        layout.addWidget(self.bookInput)
+        button = QPushButton('Добавить книгу')
+        button.clicked.connect(self.addBook)
+        layout.addWidget(button)
+        self.setLayout(layout)
+
+    def addBook(self):
+        name = self.nameInput.text()
+        book = self.bookInput.text()
+
+        if not name or not book:
+            QMessageBox.information(self, 'Ошибка', 'Введите все поля')
+            return
+
+        try:
+            conn = sqlite3.connect("users.db")
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO writers (name, book) VALUES (?, ?)", (name, book))
+            conn.commit()
+            conn.close()
+            QMessageBox.information(self, 'Успешно', 'Книга добавлена!')
+            self.close()
+        except sqlite3.Error as e:
+            QMessageBox.information(self, 'Ошибка', 'Ошибка при работе с базой данных: ' + str(e))
+
+
+class BooksWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        layout = QVBoxLayout()
+        self.booksText = QTextBrowser()
+        layout.addWidget(self.booksText)
+        button = QPushButton('Закрыть')
+        button.clicked.connect(self.close)
+        layout.addWidget(button)
+        self.setLayout(layout)
+
+        try:
+            with open('books.txt', 'r', encoding='utf-8') as file:
+                text = file.read()
+                self.booksText.setText(text)
+        except FileNotFoundError:
+            QMessageBox.information(self, 'Ошибка', 'Файл books.txt не найден')
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
