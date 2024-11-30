@@ -1,4 +1,7 @@
-from imports_def import *
+from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit,
+                             QMessageBox, QHBoxLayout)
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import *
 import sqlite3
 
 
@@ -16,7 +19,7 @@ class AuthWindow(QWidget):
         # Добавляем картинку на фоне
         self.background = QLabel(self)
         self.background.setGeometry(0, 0, 350, 250)  # Увеличиваем размер картинки
-        pixmap = QPixmap('pictures\1.jpg')
+        pixmap = QPixmap('point_0.txt.jpg')
         pixmap = pixmap.scaled(450, 350, Qt.KeepAspectRatio)  # Увеличиваем размер картинки
         self.background.setPixmap(pixmap)
 
@@ -76,7 +79,7 @@ class AuthWindow(QWidget):
                                                     'Пароль должен содержать не меньше 6 символов!')
             return
 
-        conn = sqlite3.connect("database\users.db")
+        conn = sqlite3.connect("users.db")
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM users WHERE email = ? AND password = ?", (email, password))
         user = cursor.fetchone()
@@ -106,7 +109,7 @@ class AuthWindow(QWidget):
             return
 
         try:
-            conn = sqlite3.connect("database\users.db")
+            conn = sqlite3.connect("users.db")
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
 

@@ -1,8 +1,13 @@
-from imports_def import *
-from imports_files import *
+from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit,
+                             QMessageBox, QTabWidget, QHBoxLayout, QInputDialog, QScrollArea, QTextBrowser, QTextEdit)
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+import sqlite3, sys
+import hashlib
 
-
-"""
+password = 'admin'
+hashed_password = hashlib.sha256(password.encode()).hexdigest()
+print(hashed_password)
 # Создание базы данных с пользователями и вопросами
 conn = sqlite3.connect("users.db")
 cursor = conn.cursor()
@@ -26,40 +31,41 @@ cursor.execute(
     )''')
 
 cursor.execute(
-    ''' DROP TABLE IF EXISTS questions'''
-)
-
-cursor.execute(
     '''CREATE TABLE IF NOT EXISTS questions (
         id INTEGER PRIMARY KEY,
         question TEXT,
         answer TEXT,
-        difficulty INTEGER,
         score INTEGER
+    )''')
+
+cursor.execute(
+    '''CREATE TABLE IF NOT EXISTS user_scores (
+        id INTEGER PRIMARY KEY,
+        user_id INTEGER,
+        score INTEGER,
+        FOREIGN KEY (user_id) REFERENCES users (id)
     )''')
 
 # Добавление вопросов в базу данных
 questions = [
-    ("Кто написал роман 'Война и мир'?", "Лев Толстой", 1, 10),
-    ("Кто написал роман 'Преступление и наказание'?", "Федор Достоевский", 1, 10),
-    ("Кто написал роман 'Анна Каренина'?", "Лев Толстой", 1, 10),
-    ("Кто написал роман 'Братья Карамазовы'?", "Федор Достоевский", 1, 10),
-    ("Кто написал роман 'Воскресение'?", "Лев Толстой", 1, 10),
-    # Добавьте еще вопросы...
+    ("Кто написал роман 'Война и мир'?", "Лев Толстой", 1),
+    ("Кто написал роман 'Преступление и наказание'?", "Федор Достоевский", 2),
+    ("Кто написал роман 'Анна Каренина'?", "Лев Толстой", 1),
+    ("Кто написал роман 'Братья Карамазовы'?", "Федор Достоевский", 3),
+    ("Кто написал роман 'Воскресение'?", "Лев Толстой", 1),
 ]
 
-for question, answer, difficulty, score in questions:
-    cursor.execute("INSERT OR IGNORE INTO questions (question, answer, difficulty, score) VALUES (?, ?, ?, ?)",
-                   (question, answer, difficulty, score))
+for question, answer, score in questions:
+    cursor.execute("INSERT OR IGNORE INTO questions (question, answer, score) VALUES (?, ?, ?)",
+                   (question, answer, score))
 
 conn.commit()
 conn.close()
-"""
+
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-
         self.initUI()
 
     def initUI(self):
@@ -101,6 +107,9 @@ class AuthWindow(QWidget):
 
         self.initUI()
 
+    def hash_password(self, password):
+        return hashlib.sha256(password.encode()).hexdigest()
+
     def initUI(self):
         self.setGeometry(300, 300, 350, 250)  # Увеличиваем размер окна
         self.setFixedSize(350, 250)  # Делаем окно не растягиваемым
@@ -109,13 +118,12 @@ class AuthWindow(QWidget):
         # Добавляем картинку на фоне
         self.background = QLabel(self)
         self.background.setGeometry(0, 0, 350, 250)  # Увеличиваем размер картинки
-        pixmap = QPixmap('1.jpg')
+        pixmap = QPixmap('photo_5355309471032797434_y.jpg')
         pixmap = pixmap.scaled(450, 350, Qt.KeepAspectRatio)  # Увеличиваем размер картинки
         self.background.setPixmap(pixmap)
 
         layout = QVBoxLayout()
-        layout.setContentsMargins(20, 20, 20, 20)  # Добавляем отступы
-
+        layout.setContentsMargins(20, 20, 20, 20)
         label = QLabel('Введите почту и пароль')
         label.setStyleSheet("color: #453530;")  # Делаем надпись коричневой
         layout.addWidget(label)
@@ -169,16 +177,19 @@ class AuthWindow(QWidget):
                                                     'Пароль должен содержать не меньше 6 символов!')
             return
 
+        hashed_password = self.hash_password(password)
+
         conn = sqlite3.connect("users.db")
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM users WHERE email = ? AND password = ?", (email, password))
+        cursor.execute("SELECT * FROM users WHERE email = ? AND password = ?", (email, hashed_password))
         user = cursor.fetchone()
 
         if user:
-            self.mainWindow = MainWindowWithTabs()
-            self.mainWindow.quizWindow.userId = user[0]  # сохраните ID пользователя
-            self.mainWindow.show()
-            self.hide()
+            if user:
+                # Передаем userId в MainWindowWithTabs
+                self.mainWindow = MainWindowWithTabs()
+                self.mainWindow.show()
+                self.hide()
         else:
             QMessageBox.information(self, 'Ошибка', 'Неправильная почта или пароль')
         conn.close()
@@ -210,13 +221,16 @@ class AuthWindow(QWidget):
                 conn.close()
                 return
 
-            cursor.execute("INSERT INTO users (email, password) VALUES (?, ?)", (email, password))
+            hashed_password = self.hash_password(password)
+            cursor.execute("INSERT INTO users (email, password) VALUES (?, ?)", (email,
+                                                                                 hashed_password))
             conn.commit()
             conn.close()
             QMessageBox.information(self, 'Успешно', 'Вы успешно зарегистрировались!')
             self.close()
             self.mainWindow = MainWindowWithTabs()
             self.mainWindow.show()
+            self.hide()
 
         except sqlite3.Error as e:
             QMessageBox.information(self, 'Ошибка', 'Ошибка при работе с базой данных: ' + str(e))
@@ -225,7 +239,6 @@ class AuthWindow(QWidget):
 class MainWindowWithTabs(QWidget):
     def __init__(self):
         super().__init__()
-
         self.initUI()
 
     def initUI(self):
@@ -235,8 +248,6 @@ class MainWindowWithTabs(QWidget):
         self.tabWidget = QTabWidget()
         layout.addWidget(self.tabWidget)
         self.setLayout(layout)
-        self.quizTab = QuizTab()
-        self.tabWidget.addTab(self.quizTab, 'Викторина')
         self.dTab = dTab()
         self.tabWidget.addTab(self.dTab, 'Добавить писателя')
         self.gameTab = GameTab()
@@ -247,12 +258,78 @@ class MainWindowWithTabs(QWidget):
         self.tabWidget.addTab(self.mapTab, 'Карта')
         self.show()
 
+    def updateScore(self):
+        conn = sqlite3.connect("users.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT score FROM users WHERE id = ?", (self.userId,))
+        score = cursor.fetchone()
+        conn.close()
+        if score is not None:
+            self.scoreLabel.setText('Баллы: ' + str(score[0]))
+
+
+class FixedButton(QLabel):
+    def __init__(self, x, y, parent=None, point_number=None):
+        super().__init__(parent)
+        self.setGeometry(x, y, 20, 20)
+        self.setStyleSheet(
+            "background-color: transparent; border: 2px solid #964B00; border-radius: 10px")
+        self.setCursor(QCursor(Qt.PointingHandCursor))
+
+        self.point_number = point_number
+        self.x = x
+        self.y = y
+
+    def enterEvent(self, event):
+        self.setStyleSheet(
+            "background-color: transparent; border: 2px solid #FFD700; border-radius: 10px")
+
+    def leaveEvent(self, event):
+        self.setStyleSheet(
+            "background-color: transparent; border: 2px solid #964B00; border-radius: 10px")
+
+    def mousePressEvent(self, event):
+        if self.point_number is not None:
+            self.window = PointWindow(self.point_number)
+            self.window.show()
+
+
+class PointWindow(QWidget):
+    def __init__(self, point_number):
+        super().__init__()
+        self.point_number = point_number
+        self.initUI()
+
+    def initUI(self):
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+
+        file_name = f"point_{self.point_number}.txt"
+        try:
+            with open(file_name, 'r', encoding='utf-8') as file:  # Убедитесь, что используете правильную кодировку
+                text = file.read()
+                self.text_edit = QTextEdit()
+                self.text_edit.setText(text)
+                self.text_edit.setReadOnly(True)
+                layout.addWidget(self.text_edit)
+        except FileNotFoundError:
+            QMessageBox.warning(self, "Ошибка", f"Файл {file_name} не найден.")
+            self.close()
+        except Exception as e:
+            QMessageBox.warning(self, "Ошибка", f"Произошла ошибка: {str(e)}")
+            self.close()
+
 
 class MapTab(QWidget):
     def __init__(self):
         super().__init__()
-
         self.initUI()
+        self.codes = ["CODE1", "CODE2", "CODE3", "CODE4", "CODE5",
+                      "CODE6", "CODE7", "CODE8", "CODE9", "CODE10",
+                      "CODE11", "CODE12", "CODE13", "CODE14", "CODE15",
+                      "CODE16", "CODE17", "CODE18"]  # Заданные коды
+        self.user_answers = {code: False for code in self.codes}
+        self.score = 0
 
     def initUI(self):
         layout = QVBoxLayout()
@@ -260,112 +337,48 @@ class MapTab(QWidget):
         self.scrollArea.setWidgetResizable(True)
         layout.addWidget(self.scrollArea)
         self.setLayout(layout)
+
         self.mapImage = QLabel()
         self.mapImage.setPixmap(QPixmap('Карта.png'))
-        self.mapImage.resize(self.width(), self.height())  # установите размер картинки
+        self.mapImage.setScaledContents(True)
         self.scrollArea.setWidget(self.mapImage)
 
+        self.create_buttons()
+
+        self.codeInput = QLineEdit()
+        self.codeInput.setPlaceholderText("Введите код")
+        layout.addWidget(self.codeInput)
+
+        self.checkCodeButton = QPushButton('Проверить код')
+        self.checkCodeButton.clicked.connect(self.checkCode)
+        layout.addWidget(self.checkCodeButton)
+
+        self.scoreLabel = QLabel('Баллы: 0')
+        layout.addWidget(self.scoreLabel)
+
+    def create_buttons(self):
+        coordinates = [(560, 50), (727, 67), (597, 141), (465, 252), (1098, 328),
+                       (927, 417), (1343, 403), (1010, 484), (1212, 475), (943, 561),
+                       (405, 604), (620, 711), (1273, 688), (965, 912), (590, 955),
+                       (880, 955), (790, 1038), (965, 1023)]
+
+        for i, (x, y) in enumerate(coordinates):
+            button = FixedButton(x, y, self.mapImage, i)
+            button.show()
+
+    def checkCode(self):
+        code = self.codeInput.text()
+        if code in self.codes and not self.user_answers[code]:
+            self.score += 10
+            self.user_answers[code] = True
+            self.scoreLabel.setText('Баллы: ' + str(self.score))
+            QMessageBox.information(self, 'Правильный код!', f'Вы ввели правильный код: {code}!')
+        else:
+            QMessageBox.information(self, 'Ошибка', 'Код неверный или уже использован!')
+
     def resizeEvent(self, event):
-        self.mapImage.resize(self.width(), self.height())
         super().resizeEvent(event)
 
-
-class QuizTab(QWidget):
-    def __init__(self):
-        super().__init__()
-
-        self.initUI()
-
-    def initUI(self):
-        layout = QVBoxLayout()
-        label = QLabel('Викторина')
-        layout.addWidget(label)
-        button = QPushButton('Начать викторину')
-        button.clicked.connect(self.startQuiz)
-        layout.addWidget(button)
-        self.setLayout(layout)
-
-    def startQuiz(self):
-        self.quizWindow = QuizWindow()
-        self.quizWindow.show()
-
-
-class QuizWindow(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
-        self.score = 0
-        self.currentQuestion = 0
-        self.questions = self.getQuestions()
-        self.userId = None  # добавьте переменную для хранения ID пользователя
-
-    def initUI(self):
-        layout = QVBoxLayout()
-        self.questionLabel = QLabel()
-        layout.addWidget(self.questionLabel)
-        self.answerInput = QLineEdit()
-        layout.addWidget(self.answerInput)
-        button = QPushButton('Ответить')
-        button.clicked.connect(self.checkAnswer)
-        layout.addWidget(button)
-        self.scoreLabel = QLabel('Счет: 0')
-        layout.addWidget(self.scoreLabel)
-        self.setLayout(layout)
-        if self.questions:
-            self.showQuestion()
-        else:
-            self.questionLabel.setText('Вопросов нет!')
-
-    def getQuestions(self):
-        conn = sqlite3.connect("users.db")
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM questions")
-        questions = cursor.fetchall()
-        conn.close()
-        return questions
-
-    def showQuestion(self):
-        if self.currentQuestion < len(self.questions):
-            question = self.questions[self.currentQuestion]
-            self.questionLabel.setText(question[1])
-        else:
-            self.questionLabel.setText('Викторина окончена!')
-            self.answerInput.setReadOnly(True)
-
-    def checkAnswer(self):
-        if self.currentQuestion < len(self.questions):
-            question = self.questions[self.currentQuestion]
-            answer = self.answerInput.text()
-            if answer.lower() == question[2].lower():
-                self.score += question[4]
-                self.scoreLabel.setText('Счет: ' + str(self.score))
-                self.updateScore()  # обновите значение score в базе данных
-                QMessageBox.information(self, 'Правильно!', 'Вы правильно ответили на вопрос!')
-            else:
-                QMessageBox.information(self, 'Неправильно!', 'Вы неправильно ответили на вопрос!')
-            self.currentQuestion += 1
-            self.answerInput.clear()
-            self.showQuestion()
-        else:
-            self.questionLabel.setText('Викторина окончена!')
-            self.answerInput.setReadOnly(True)
-
-    def updateScore(self):
-        if self.userId is not None:
-            conn = sqlite3.connect("users.db")
-            cursor = conn.cursor()
-            cursor.execute("UPDATE users SET score = ? WHERE id = ?", (self.score, self.userId))
-            conn.commit()
-            conn.close()
-        else:
-            print("ID пользователя не задан")
-
-    def updateScore(self):
-        conn = sqlite3.connect("users.db")
-        cursor = conn.cursor()
-        cursor.execute("UPDATE users SET score = ? WHERE id = ?", (self.score, self.userId))
-        conn.commit()
-        conn.close()
 
 
 class dTab(QWidget):
@@ -385,7 +398,8 @@ class dTab(QWidget):
 
     def startQuest(self):
         password, ok = QInputDialog.getText(self, 'Вход', 'Введите пароль администратора')
-        if ok and password == 'admin':  # замените 'admin' на свой пароль администратора
+        if ok and hashlib.sha256(password.encode()).hexdigest() == ('8c6976e5b5410415bde908bd4dee15dfb167a9c8'
+                                                                    '73fc4bb8a81f6f2ab448a918'):
             self.addWriterWindow = AddWriterWindow()
             self.addWriterWindow.show()
         else:
@@ -428,7 +442,8 @@ class AddWriterWindow(QWidget):
         try:
             conn = sqlite3.connect("users.db")
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO writers (name, book, year) VALUES (?, ?, ?)", (name, book, year))
+            cursor.execute("INSERT INTO writers (name, book, year) VALUES (?, ?, ?)", (name,
+                                                                                       book, year))
             conn.commit()
             conn.close()
             QMessageBox.information(self, 'Успешно', 'Писатель добавлен!')
@@ -448,13 +463,75 @@ class GameTab(QWidget):
         label = QLabel('Писатели')
         layout.addWidget(label)
         button = QPushButton('Все наши писатели')
-        button.clicked.connect(self.startGame)
+        button.clicked.connect(self.showAllWriters)
+        layout.addWidget(button)
+        button = QPushButton('Добавленные писатели')
+        button.clicked.connect(self.showAddedWriters)
         layout.addWidget(button)
         self.setLayout(layout)
 
-    def startGame(self):
-        # реализация игрового режима
-        pass
+    def showAllWriters(self):
+        self.allWritersWindow = AllWritersWindow()
+        self.allWritersWindow.show()
+
+    def showAddedWriters(self):
+        self.addedWritersWindow = AddedWritersWindow()
+        self.addedWritersWindow.show()
+
+
+class AllWritersWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        layout = QVBoxLayout()
+        self.writersText = QTextBrowser()
+        layout.addWidget(self.writersText)
+        button = QPushButton('Закрыть')
+        button.clicked.connect(self.close)
+        layout.addWidget(button)
+        self.setLayout(layout)
+        try:
+            with open('writers.txt', 'r', encoding='utf-8') as file:
+                text = file.read()
+                self.writersText.setText(text)
+        except FileNotFoundError:
+            QMessageBox.information(self, 'Ошибка', 'Файл не найден')
+
+
+class AddedWritersWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        layout = QVBoxLayout()
+        self.writersText = QTextBrowser()
+        layout.addWidget(self.writersText)
+        button = QPushButton('Закрыть')
+        button.clicked.connect(self.close)
+        layout.addWidget(button)
+        self.setLayout(layout)
+        self.showWriters()
+
+    def showWriters(self):
+        try:
+            conn = sqlite3.connect("users.db")
+            cursor = conn.cursor()
+            cursor.execute("SELECT name, book, year FROM writers")
+            writers = cursor.fetchall()
+            conn.close()
+
+            text = ""
+            for writer in writers:
+                text += f"Имя: {writer[0]}\nКнига: {writer[1]}\nГоды жизни: {writer[2]}\n\n"
+
+            self.writersText.setText(text)
+        except sqlite3.Error as e:
+            QMessageBox.information(self, 'Ошибка', 'Ошибка при работе с базой данных: ' + str(e))
 
 
 class LibraryTab(QWidget):
@@ -493,21 +570,16 @@ class LibraryTab(QWidget):
 
         self.booksText.setText(text)
 
-        text = ""
-        for book in books:
-            text += f"Автор: {book[0]}\nКнига: {book[1]}\n\n"
-
-        self.booksText.setText(text)
-
     def showBooks_d(self):
         self.booksWindow = BooksWindow()
         self.booksWindow.show()
 
     def addBook(self):
         password, ok = QInputDialog.getText(self, 'Вход', 'Введите пароль администратора')
-        if ok and password == 'admin1':  # замените 'admin' на свой пароль администратора
-            self.addBookWindow = AddBookWindow()
-            self.addBookWindow.show()
+        if ok and hashlib.sha256(password.encode()).hexdigest() == ('8c6976e5b5410415bde908bd4dee'
+                                                                    '15dfb167a9c873fc4bb8a81f6f2ab448a918'):
+            self.AddBookWindow = AddBookWindow()
+            self.AddBookWindow.show()
         else:
             QMessageBox.information(self, 'Ошибка', 'Неправильный пароль администратора')
 
@@ -567,7 +639,6 @@ class BooksWindow(QWidget):
         button.clicked.connect(self.close)
         layout.addWidget(button)
         self.setLayout(layout)
-
         try:
             with open('books.txt', 'r', encoding='utf-8') as file:
                 text = file.read()
@@ -580,4 +651,4 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     mainWindow = MainWindow()
     mainWindow.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
