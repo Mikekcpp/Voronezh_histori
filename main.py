@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit,
-                             QMessageBox, QTabWidget, QHBoxLayout, QInputDialog, QScrollArea, QTextBrowser, QTextEdit)
+                             QMessageBox, QTabWidget, QHBoxLayout, QInputDialog, QScrollArea, QTextBrowser,
+                             QTextEdit, QSizePolicy)
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import sqlite3, sys
@@ -69,23 +70,17 @@ class MainWindow(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.setGeometry(300, 300, 800, 600)  # Установка размера окна
-        self.setFixedSize(800, 600)  # Установка неподвижного размера окна
         self.setWindowTitle('Литературное путешествие по Воронежу')
 
         self.pImage = QLabel(self)
         self.pImage.setPixmap(QPixmap('приветств.png'))
         self.pImage.setScaledContents(True)  # Масштабирование картинки
-        self.pImage.resize(800, 600)  # Установка размера картинки
 
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)  # Удаление отступов
         layout.setSpacing(0)  # Удаление расстояния между элементами
 
-        self.pImage.setLayout(layout)
-
         button = QPushButton('Начать работу')
-        button.setFixedSize(200, 50)  # Установка размера кнопки
         button.setStyleSheet("background-color: #453530; border-radius: 10px; font-size: 18pt; "
                              "font-weight: bold; color: white;")
         button.clicked.connect(self.startWork)
@@ -93,7 +88,16 @@ class MainWindow(QWidget):
         layout.addWidget(button)
         layout.setAlignment(button, Qt.AlignCenter)  # Выравнивание кнопки по центру
 
-        self.setLayout(layout)
+        self.pImage.setLayout(layout)
+
+        self.setLayout(QVBoxLayout())
+        self.layout().addWidget(self.pImage)
+        self.layout().setStretchFactor(self.pImage, 1)  # Задаем stretch для картинки
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        # Обновляем размер картинки при изменении размера окна
+        self.pImage.resize(self.width(), self.height())
 
     def startWork(self):
         self.authWindow = AuthWindow()
@@ -101,66 +105,69 @@ class MainWindow(QWidget):
         self.hide()
 
 
+
 class AuthWindow(QWidget):
+    MIN_PASSWORD_LENGTH = 6
+
     def __init__(self):
         super().__init__()
 
         self.initUI()
 
-    def hash_password(self, password):
+    def hash_password(self, password: str) -> str:
+        """Хеширует пароль с помощью SHA-256"""
         return hashlib.sha256(password.encode()).hexdigest()
 
+    def check_password(self, password: str) -> bool:
+        """Проверяет пароль на длину и содержание"""
+        return len(password) >= self.MIN_PASSWORD_LENGTH and '123456' not in password
+
     def initUI(self):
-        self.setGeometry(300, 300, 350, 250)  # Увеличиваем размер окна
-        self.setFixedSize(350, 250)  # Делаем окно не растягиваемым
+        self.setGeometry(100, 100, 800, 600)
         self.setWindowTitle('Авторизация')
 
-        # Добавляем картинку на фоне
-        self.background = QLabel(self)
-        self.background.setGeometry(0, 0, 350, 250)  # Увеличиваем размер картинки
-        pixmap = QPixmap('photo_5355309471032797434_y.jpg')
-        pixmap = pixmap.scaled(450, 350, Qt.KeepAspectRatio)  # Увеличиваем размер картинки
-        self.background.setPixmap(pixmap)
-
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self)
         layout.setContentsMargins(20, 20, 20, 20)
+
+        layout.setAlignment(Qt.AlignCenter)
+        self.background = QLabel(self)
+        self.background.setGeometry(0, 0, 800, 600)  # Увеличиваем размер картинки
+        pixmap = QPixmap('през (3).png')
+        self.background.setPixmap(pixmap.scaled(self.size(), Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation))
+
         label = QLabel('Введите почту и пароль')
-        label.setStyleSheet("color: #453530;")  # Делаем надпись коричневой
+        label.setStyleSheet("color: #453530; font-size: 24px;")
         layout.addWidget(label)
 
-        # Добавляем надписи в поле ввода
         self.emailInput = QLineEdit()
         self.emailInput.setPlaceholderText("Email")
-        self.emailInput.setStyleSheet("background-color: rgba(255, 255, 255, 0.5); border-radius: 10px; padding: 5px;")
+        self.emailInput.setStyleSheet("background-color: rgba(255, 255, 255, 0.5); border-radius: 10px; padding: 10px;")
+        self.emailInput.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         layout.addWidget(self.emailInput)
 
         self.passwordInput = QLineEdit()
         self.passwordInput.setEchoMode(QLineEdit.Password)
         self.passwordInput.setPlaceholderText("Пароль")
-        self.passwordInput.setStyleSheet(
-            "background-color: rgba(255, 255, 255, 0.5); border-radius: 10px; padding: 5px;")
+        self.passwordInput.setStyleSheet("background-color: rgba(255, 255, 255, 0.5); border-radius: 10px; padding: 10px;")
+        self.passwordInput.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         layout.addWidget(self.passwordInput)
 
         buttonLayout = QHBoxLayout()
+        buttonLayout.setAlignment(Qt.AlignCenter)
+
         loginButton = QPushButton('Войти')
         loginButton.clicked.connect(self.login)
-        loginButton.setStyleSheet("background-color: #453530; color: white; border-radius: 10px; padding: 5px;")
+        loginButton.setStyleSheet("background-color: #453530; color: white; border-radius: 10px; padding: 10px;")
+        loginButton.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         buttonLayout.addWidget(loginButton)
 
         registerButton = QPushButton('Регистрация')
         registerButton.clicked.connect(self.register)
-        registerButton.setStyleSheet("background-color: #453530; color: white; border-radius: 10px; padding: 5px;")
+        registerButton.setStyleSheet("background-color: #453530; color: white; border-radius: 10px; padding: 10px;")
+        registerButton.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         buttonLayout.addWidget(registerButton)
 
         layout.addLayout(buttonLayout)
-
-        container = QWidget(self)
-        container.setGeometry(0, 0, 350, 250)
-        container.setLayout(layout)
-        container.setStyleSheet("background-color: transparent;")  # Делаем контейнер прозрачным
-
-        self.background.lower()  # Перемещаем картинку на задний план
-        container.raise_()  # Перемещаем контейнер на передний план
 
     def login(self):
         email = self.emailInput.text()
@@ -172,27 +179,27 @@ class AuthWindow(QWidget):
         if '@' not in email:
             QMessageBox.information(self, 'Ошибка', 'Введите корректную почту!')
             return
-        if len(password) < 6 or '123456' in password:
+        if not self.check_password(password):
             QMessageBox.information(self, 'Ошибка', 'Введите корректный пароль! '
                                                     'Пароль должен содержать не меньше 6 символов!')
             return
 
         hashed_password = self.hash_password(password)
 
-        conn = sqlite3.connect("users.db")
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM users WHERE email = ? AND password = ?", (email, hashed_password))
-        user = cursor.fetchone()
+        try:
+            with sqlite3.connect("users.db") as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM users WHERE email = ? AND password = ?", (email, hashed_password))
+                user = cursor.fetchone()
 
-        if user:
-            if user:
-                # Передаем userId в MainWindowWithTabs
-                self.mainWindow = MainWindowWithTabs()
-                self.mainWindow.show()
-                self.hide()
-        else:
-            QMessageBox.information(self, 'Ошибка', 'Неправильная почта или пароль')
-        conn.close()
+                if user:
+                    self.mainWindow = MainWindowWithTabs()
+                    self.mainWindow.show()
+                    self.hide()
+                else:
+                    QMessageBox.information(self, 'Ошибка', 'Неправильная почта или пароль')
+        except sqlite3.Error as e:
+            QMessageBox.information(self, 'Ошибка', 'Ошибка при работе с базой данных: ' + str(e))
 
     def register(self):
         email = self.emailInput.text()
@@ -204,36 +211,40 @@ class AuthWindow(QWidget):
         if '@' not in email:
             QMessageBox.information(self, 'Ошибка', 'Введите корректную почту!')
             return
-        if len(password) < 6 or '123456' in password:
+        if not self.check_password(password):
             QMessageBox.information(self, 'Ошибка', 'Введите корректный пароль! '
                                                     'Пароль должен содержать не меньше 6 символов!')
             return
 
         try:
-            conn = sqlite3.connect("users.db")
-            cursor = conn.cursor()
-            cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+            with sqlite3.connect("users.db") as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+                user = cursor.fetchone()
 
-            user = cursor.fetchone()
+                if user:
+                    QMessageBox.information(self, 'Ошибка', 'Пользователь с таким email уже существует')
+                    return
 
-            if user:
-                QMessageBox.information(self, 'Ошибка', 'Пользователь с таким email уже существует')
-                conn.close()
-                return
-
-            hashed_password = self.hash_password(password)
-            cursor.execute("INSERT INTO users (email, password) VALUES (?, ?)", (email,
-                                                                                 hashed_password))
-            conn.commit()
-            conn.close()
-            QMessageBox.information(self, 'Успешно', 'Вы успешно зарегистрировались!')
-            self.close()
-            self.mainWindow = MainWindowWithTabs()
-            self.mainWindow.show()
-            self.hide()
-
+                hashed_password = self.hash_password(password)
+                cursor.execute("INSERT INTO users (email, password) VALUES (?, ?)", (email, hashed_password))
+                conn.commit()
+                QMessageBox.information(self, 'Успешно', 'Вы успешно зарегистрировались!')
+                self.close()
+                self.mainWindow = MainWindowWithTabs()
+                self.mainWindow.show()
+                self.hide()
         except sqlite3.Error as e:
             QMessageBox.information(self, 'Ошибка', 'Ошибка при работе с базой данных: ' + str(e))
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self.background.resize(self.size())
+        pixmap = QPixmap('photo_5355309471032797434_y.jpg')
+        self.background.setPixmap(pixmap.scaled(self.size(), Qt.KeepAspectRatioByExpanding, Qt.SmoothTransformation))
+
+
+
 
 
 class MainWindowWithTabs(QWidget):
