@@ -306,7 +306,7 @@ class PointWindow(QWidget):
 
         file_name = f"point_{self.point_number}.txt"
         try:
-            with open(file_name, 'r', encoding='utf-8') as file:  # Убедитесь, что используете правильную кодировку
+            with open(file_name, 'r', encoding='utf-8') as file:
                 text = file.read()
                 self.text_edit = QTextEdit()
                 self.text_edit.setText(text)
@@ -339,7 +339,7 @@ class MapTab(QWidget):
         self.setLayout(layout)
 
         self.mapImage = QLabel()
-        self.mapImage.setPixmap(QPixmap('Карта.png'))
+        self.mapImage.setPixmap(QPixmap('през (2).png'))
         self.mapImage.setScaledContents(True)
         self.scrollArea.setWidget(self.mapImage)
 
@@ -371,14 +371,13 @@ class MapTab(QWidget):
         if code in self.codes and not self.user_answers[code]:
             self.score += 10
             self.user_answers[code] = True
-            self.scoreLabel.setText('Баллы: ' + str(self.score))
-            QMessageBox.information(self, 'Правильный код!', f'Вы ввели правильный код: {code}!')
+            self.scoreLabel.setText('Литеробаллы: ' + str(self.score))
+            QMessageBox.information(self, 'Правильный код!', f'Вы свои литеробаллы!')
         else:
             QMessageBox.information(self, 'Ошибка', 'Код неверный или уже использован!')
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
-
 
 
 class dTab(QWidget):
@@ -388,13 +387,41 @@ class dTab(QWidget):
         self.initUI()
 
     def initUI(self):
-        layout = QVBoxLayout()
-        label = QLabel('Добавить писателя')
-        layout.addWidget(label)
-        button = QPushButton('Добавить писателя')
-        button.clicked.connect(self.startQuest)
-        layout.addWidget(button)
-        self.setLayout(layout)
+        # Фоновое изображение
+        self.background_image = QLabel(self)
+        self.background_image.setStyleSheet("border: none;")
+        self.background_image.setScaledContents(True)
+        self.background_image.setPixmap(QPixmap("през перо.png"))  # Путь к картинке
+        self.background_image.resize(self.width(), self.height())  # Размеры окна
+
+        # Заголовок
+        self.label = QLabel('Добавить писателя', self)
+        self.label.setStyleSheet("color: white; font-size: 24pt;")
+        self.label.move(350, 250)
+
+        # Кнопка "Добавить писателя"
+        self.button = QPushButton('Добавить писателя', self)
+        self.button.setStyleSheet(
+            "background-color: #453530; color: white; border: none; border-radius: 10px; padding: 15px; font-size: 16pt;")
+        self.button.clicked.connect(self.startQuest)
+
+        # Автоматическая настройка размера кнопки
+        self.button.setFixedSize(250, 60)  # Увеличиваем размеры кнопки
+        self.button.move(self.width() // 2 - self.button.width() // 2, self.height() - self.button.height() - 20)
+
+        # Поднимаем элементы на передний план
+        self.background_image.raise_()
+        self.label.raise_()
+        self.button.raise_()
+
+    def resizeEvent(self, event):
+        # Изменяем размеры фона
+        self.background_image.resize(self.width(), self.height())
+        # Центрируем заголовок
+        self.label.move(self.width() // 2 - self.label.width() // 2, self.height() // 2 - self.label.height() // 2)
+        # Перемещаем кнопку
+        self.button.move(self.width() // 2 - self.button.width() // 2, self.height() - self.button.height() - 20)
+        super().resizeEvent(event)
 
     def startQuest(self):
         password, ok = QInputDialog.getText(self, 'Вход', 'Введите пароль администратора')
@@ -459,16 +486,53 @@ class GameTab(QWidget):
         self.initUI()
 
     def initUI(self):
-        layout = QVBoxLayout()
-        label = QLabel('Писатели')
-        layout.addWidget(label)
-        button = QPushButton('Все наши писатели')
-        button.clicked.connect(self.showAllWriters)
-        layout.addWidget(button)
-        button = QPushButton('Добавленные писатели')
-        button.clicked.connect(self.showAddedWriters)
-        layout.addWidget(button)
-        self.setLayout(layout)
+        # Устанавливаем размеры окна
+        self.setMinimumSize(800, 600)
+
+        # Фоновое изображение
+        self.background_image = QLabel(self)
+        self.background_image.setStyleSheet("border: none;")
+        self.background_image.setScaledContents(True)
+        self.background_image.setPixmap(QPixmap("през перо.png"))  # Путь к картинке
+
+        main_layout = QVBoxLayout(self)
+
+        # Центрируем заголовок
+        # Центрируем заголовок
+        label = QLabel('Писатели', self)
+        label.setStyleSheet("color: white; font-size: 24pt;")
+        label.setAlignment(Qt.AlignCenter)  # Центрируем текст
+        main_layout.addWidget(label, stretch=1, alignment=Qt.AlignHCenter)
+
+        # Добавляем растяжение для центрирования заголовка по вертикали
+        main_layout.addStretch()
+
+        # Вертикальный компоновщик для кнопок
+        button_layout = QHBoxLayout()
+
+        button_all = QPushButton('Воронежские писатели', self)
+        button_all.setStyleSheet("background-color: #453530; color: white; border: none; border-radius: "
+                                 "10px; padding: 10px; font-size: 16pt;")  # Уменьшаем размер кнопки
+        button_all.setFixedSize(250, 60)  # Устанавливаем фиксированный размер кнопки
+        button_all.clicked.connect(self.showAllWriters)
+        button_layout.addWidget(button_all, alignment=Qt.AlignCenter)  # Центрируем кнопку
+
+        button_added = QPushButton('Добавленные писатели', self)
+        button_added.setStyleSheet("background-color: #453530; color: white; border: none; border-radius: "
+                                   "10px; padding: 10px; font-size: 16pt;")  # Уменьшаем размер кнопки
+        button_added.setFixedSize(250, 60)  # Устанавливаем фиксированный размер кнопки
+        button_added.clicked.connect(self.showAddedWriters)
+        button_layout.addWidget(button_added, alignment=Qt.AlignCenter)  # Центрируем кнопку
+
+        # Уменьшаем расстояние между кнопками
+        button_layout.setSpacing(20)  # Устанавливаем расстояние между кнопками
+
+        main_layout.addLayout(button_layout)
+        self.setLayout(main_layout)
+
+    def resizeEvent(self, event):
+        self.background_image.resize(self.size())
+        super().resizeEvent(event)
 
     def showAllWriters(self):
         self.allWritersWindow = AllWritersWindow()
@@ -541,20 +605,49 @@ class LibraryTab(QWidget):
         self.initUI()
 
     def initUI(self):
+        # Set the background color of the LibraryTab
+        self.setAutoFillBackground(True)
+        palette = self.palette()
+        palette.setColor(QPalette.Window, QColor(240, 240, 240))  # Light gray background
+        self.setPalette(palette)
+
         layout = QVBoxLayout()
         label = QLabel('Библиотека')
         layout.addWidget(label)
+
+        # Create buttons with a style
+        button_style = """
+            QPushButton {
+                background-color: #453530;
+                color: white;
+                border-radius: 10px;
+                padding: 10px;
+            }
+            QPushButton:hover {
+                background-color: #453530;  /* Darker brown on hover */
+            }
+        """
+
         button = QPushButton('Посмотреть добавленные книги')
+        button.setStyleSheet(button_style)
         button.clicked.connect(self.showBooks)
         layout.addWidget(button)
+
         button = QPushButton('Посмотреть книги, с возможностью покупки')
+        button.setStyleSheet(button_style)
         button.clicked.connect(self.showBooks_d)
         layout.addWidget(button)
+
         button = QPushButton('Добавить книгу')
+        button.setStyleSheet(button_style)
         button.clicked.connect(self.addBook)
         layout.addWidget(button)
+
         self.booksText = QTextBrowser()
+        # Set a background pixmap for the QTextBrowser
+        self.booksText.setStyleSheet("background-image: url('през перо.png');")  # Set your image path here
         layout.addWidget(self.booksText)
+
         self.setLayout(layout)
 
     def showBooks(self):
